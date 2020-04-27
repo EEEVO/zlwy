@@ -1,0 +1,55 @@
+{
+  "pages": [{
+    "path": "pages/home/index",
+    "style": {
+      "navigationBarTitleText": "智力微云"
+    }
+  }, {
+    "path": "pages/my/index",
+    "style": {
+      "navigationBarTitleText": "我的"
+    }
+  }, {
+    "path": "pages/login/index",
+    "style": {
+      "navigationBarTitleText": "登录"
+    }
+  }, {
+    "path": "pages/addName/index",
+    "style": {
+      "navigationBarTitleText": "注册"
+    }
+  }],
+  "tabBar": {
+    "color": "#999",
+    "backgroundColor": "#FFFFFF",
+    "selectedColor": "#597ef7",
+    "borderStyle": "white",
+    "list": [{
+        "text": "首页",
+        "pagePath": "pages/home/index",
+        "iconPath": "static/tabbar/icon_home.png",
+        "selectedIconPath": "static/tabbar/icon_home_EL.png"
+      },
+      {
+        "text": "我的",
+        "pagePath": "pages/my/index",
+        "iconPath": "static/tabbar/icon_my.png",
+        "selectedIconPath": "static/tabbar/icon_my_EL.png"
+      },
+      {
+        "text": "登录",
+        "pagePath": "pages/login/index",
+        "iconPath": "static/tabbar/icon_my.png",
+        "selectedIconPath": "static/tabbar/icon_my_EL.png"
+      }
+    ],
+    "position": "bottom"
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "智力微云",
+    "navigationBarBackgroundColor": "#2f54eb",
+    "backgroundColor": "#FFFFFF"
+  }
+}
