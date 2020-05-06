@@ -16,6 +16,7 @@
 
 <script>
 var _this, countDown;
+
 export default {
   data() {
     return {

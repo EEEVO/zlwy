@@ -12,7 +12,9 @@
 import defaultConfig from './defaultConfig'
 import buildURL from '../helpers/buildURL'
 import buildFullPath from './buildFullPath'
-import { isBoolean } from '../utils'
+import {
+  isBoolean
+} from '../utils'
 
 export default class Request {
   config = defaultConfig
@@ -101,9 +103,13 @@ export default class Request {
       options.url = options.url || ''
       options.data = options.data || {}
       options.params = options.params || {}
-      options.header = {...this.config.header, ...(options.header || {})}
+      options.header = { ...this.config.header,
+        ...(options.header || {})
+      }
       options.method = options.method || this.config.method
-      options.custom =  {...this.config.custom,...(options.custom || {})}
+      options.custom = { ...this.config.custom,
+        ...(options.custom || {})
+      }
       // #ifdef APP-PLUS
       options.sslVerify = options.sslVerify === undefined ? this.config.sslVerify : options.sslVerify
       // #endif
@@ -118,8 +124,10 @@ export default class Request {
         next = false
       }
 
-      const handleRe =  {...this.requestBeforeFun(options, cancel)}
-      const _config = {...handleRe}
+      const handleRe = { ...this.requestBeforeFun(options, cancel)
+      }
+      const _config = { ...handleRe
+      }
       if (!next) return
       const requestTask = uni.request({
         url: buildURL(buildFullPath(_config.baseUrl, _config.url), _config.params),
@@ -182,8 +190,8 @@ export default class Request {
       ...options
     })
   }
-
   // #endif
+
 
   // #ifdef APP-PLUS || H5 || MP-WEIXIN || MP-BAIDU
   delete(url, data, options = {}) {
@@ -194,7 +202,6 @@ export default class Request {
       ...options
     })
   }
-
   // #endif
 
   // #ifdef APP-PLUS || H5 || MP-WEIXIN
@@ -206,7 +213,6 @@ export default class Request {
       ...options
     })
   }
-
   // #endif
 
   // #ifdef APP-PLUS || H5 || MP-WEIXIN || MP-BAIDU
@@ -218,7 +224,6 @@ export default class Request {
       ...options
     })
   }
-
   // #endif
 
   // #ifdef APP-PLUS || H5 || MP-WEIXIN || MP-BAIDU
@@ -230,7 +235,6 @@ export default class Request {
       ...options
     })
   }
-
   // #endif
 
   // #ifdef APP-PLUS || H5 || MP-WEIXIN
@@ -242,7 +246,6 @@ export default class Request {
       ...options
     })
   }
-
   // #endif
 
   upload(url, {
@@ -265,7 +268,8 @@ export default class Request {
   }) {
     return new Promise((resolve, reject) => {
       let next = true
-      const globalHeader = {...this.config.header}
+      const globalHeader = { ...this.config.header
+      }
       delete globalHeader['content-type']
       delete globalHeader['Content-Type']
       const pubConfig = {
@@ -277,10 +281,14 @@ export default class Request {
         filePath,
         method: 'UPLOAD',
         name,
-        header: {...globalHeader, ...header},
+        header: { ...globalHeader,
+          ...header
+        },
         formData,
         params,
-        custom: {...this.config.custom, ...custom},
+        custom: { ...this.config.custom,
+          ...custom
+        },
         getTask: getTask || this.config.getTask
       }
       // #ifdef APP-PLUS || H5
@@ -302,7 +310,8 @@ export default class Request {
         next = false
       }
 
-      const handleRe = {...this.requestBeforeFun(pubConfig, cancel)}
+      const handleRe = { ...this.requestBeforeFun(pubConfig, cancel)
+      }
       const _config = {
         url: buildURL(buildFullPath(handleRe.baseUrl, handleRe.url), handleRe.params),
         // #ifdef MP-ALIPAY
@@ -320,8 +329,7 @@ export default class Request {
               response.data = JSON.parse(response.data)
             }
             // eslint-disable-next-line no-empty
-          } catch (e) {
-          }
+          } catch (e) {}
           if (this.validateStatus(response.statusCode)) { // 成功
             response = this.requestComFun(response)
             resolve(response)
@@ -356,9 +364,13 @@ export default class Request {
         baseUrl: this.config.baseUrl,
         url,
         method: 'DOWNLOAD',
-        header: {...this.config.header, ...(options.header || {})},
+        header: { ...this.config.header,
+          ...(options.header || {})
+        },
         params: options.params || {},
-        custom: {...this.config.custom, ...(options.custom || {})},
+        custom: { ...this.config.custom,
+          ...(options.custom || {})
+        },
         getTask: options.getTask || this.config.getTask
       }
       const cancel = (t = 'handle cancel', config = pubConfig) => {
@@ -370,7 +382,8 @@ export default class Request {
         next = false
       }
 
-      const handleRe = {...this.requestBeforeFun(pubConfig, cancel)}
+      const handleRe = { ...this.requestBeforeFun(pubConfig, cancel)
+      }
       if (!next) return
       const requestTask = uni.downloadFile({
         url: buildURL(buildFullPath(handleRe.baseUrl, handleRe.url), handleRe.params),

@@ -5,10 +5,9 @@
     <!-- 主体表单 -->
     <view class="main">
       <wInput v-model="phoneData" type="text" maxlength="11" placeholder="手机号"></wInput>
-      <wInput v-model="verCode" type="number" placeholder="验证码" isShowCode codeText="获取验证码" setTime="30" ref="runCode" @setCode="getVerCode"></wInput>
+      <wInput v-model="verCode" type="number" maxlength="6" placeholder="验证码" isShowCode codeText="获取验证码" setTime="30" ref="runCode" @setCode="getVerCode"></wInput>
     </view>
     <wButton type="default" text="手机验证码登录" :rotate="isRotate" @click.native="startLogin" class="wbutton"></wButton>
-
     <!-- 其他登录 -->
     <view class="other_login cuIcon">
       <view class="login_icon"><view class="cuIcon-weixin" @tap="login_weixin"></view></view>
@@ -19,6 +18,9 @@
 <script>
 import wInput from '@/components/watch-login/watch-input.vue'; //input
 import wButton from '@/components/watch-login/watch-button.vue'; //button
+import { verificationMsg, login } from '@/api/user.js';
+import { regExpObj } from '@/utils/common.js';
+import { setUserToken, setAccountId } from '@/utils/token.js';
 
 export default {
   components: {
@@ -29,92 +31,81 @@ export default {
     return {
       //logo图片 base64
       logoImage: '',
-      phoneData: '', //用户/电话
+      phoneData: '17762864299', //用户/电话
       verCode: '', //验证码
+      isNickName: '', // 是否需要设置用户名
       isRotate: false //是否加载旋转
     };
   },
 
   methods: {
     //自定义事件
-    getVerCode() {
+    async getVerCode() {
+      if (!regExpObj.regExpPhone(this.phoneData)) {
+        uni.showToast({
+          icon: 'none',
+          position: 'bottom',
+          title: '手机号格式不正确'
+        });
+        return;
+      }
       //获取验证码
-      console.log('获取验证码');
-      //触发倒计时（一般用于请求成功验证码后调用）
       this.$refs.runCode.$emit('runCode');
-
-      //终止倒计时（用于突然需要终止倒计时的场景）
+      const res = await verificationMsg(this.phoneData);
+      console.log('发送验证码');
+      this.isNickName = res.result.need_set_name;
+      // 终止倒计时（用于突然需要终止倒计时的场景）
       // this.$refs.runCode.$emit('runCode', 0);
     },
-    startLogin() {
+    async startLogin() {
       //登录
       if (this.isRotate) {
         //判断是否加载中，避免重复点击请求
         return false;
       }
-      // TODO:此处使用
-      // if (this.phoneData.length !== 11) {
-      //   uni.showToast({
-      //     icon: 'none',
-      //     position: 'bottom',
-      //     title: '手机号不正确'
-      //   });
-      //   return;
-      // }
-      // if (this.verCode.length !== 6) {
-      //   uni.showToast({
-      //     icon: 'none',
-      //     position: 'bottom',
-      //     title: '验证码未输入'
-      //   });
-      //   return;
-      // }
+      if (!regExpObj.regExpPhone(this.phoneData)) {
+        uni.showToast({
+          icon: 'none',
+          position: 'bottom',
+          title: '手机号格式不正确'
+        });
+        return;
+      }
+      if (this.verCode.length !== 6) {
+        uni.showToast({
+          icon: 'none',
+          position: 'bottom',
+          title: '验证码未输入'
+        });
+        return;
+      }
       this.isRotate = true;
-      setTimeout(() => {
-        this.isRotate = false;
-      }, 3000);
-      uni.navigateTo({
-        url: '../addName/index'
+      uni.showLoading({
+        title: '登录中'
       });
-      // uni.showLoading({
-      // 	title: '登录中'
-      // });
-      // getLogin()
-      // .then(res => {
-      // 	//console.log(res)
-      // 	//简单验证下登录（不安全）
-      // 	if(_this.phoneData==res.data.username && _this.passData==res.data.password){
-      // 		let userdata={
-      // 			"username":res.data.username,
-      // 			"nickname":res.data.nickname,
-      // 			"accesstoken":res.data.accesstoken,
-      // 		} //保存用户信息和accesstoken
-      // 		_this.$store.dispatch("setUserData",userdata); //存入状态
-      // 		try {
-      // 			uni.setStorageSync('setUserData', userdata); //存入缓存
-      // 		} catch (e) {
-      // 			// error
-      // 		}
-      // 		uni.showToast({
-      // 			icon: 'success',
-      // 			position: 'bottom',
-      // 			title: '登录成功'
-      // 		});
-      // 		uni.reLaunch({
-      // 			url: '../../../pages/index',
-      // 		});
-      // 	}else{
-      // 		_this.passData=""
-      // 		uni.showToast({
-      // 			icon: 'error',
-      // 			position: 'bottom',
-      // 			title: '账号或密码错误，账号admin密码admin'
-      // 		});
-      // 	}
-      // 	uni.hideLoading();
-      // }).catch(err => {
-      // 	uni.hideLoading();
-      // })
+      // 需要设置用户名
+      if (this.isNickName) {
+        uni.showLoading({
+          title: '当前需要认证名字'
+        });
+        uni.navigateTo({
+          url: `../addName/index?phone=${this.phoneData}&verCode=${this.verCode}`
+        });
+      } else {
+        // 不需要设置用户名
+        const res = await login(this.phoneData, this.verCode);
+        uni.showToast({
+          icon: 'success',
+          position: 'bottom',
+          title: '登录成功'
+        });
+        // 保存用户信息
+        setUserToken(res.result.access_token);
+        setAccountId(res.result.account_id);
+        uni.switchTab({
+          url: '/pages/my/index'
+        });
+      }
     },
     login_weixin() {
       //微信登录

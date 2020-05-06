@@ -9,6 +9,8 @@
 <script>
 import wInput from '@/components/watch-login/watch-input.vue'; //input
 import wButton from '@/components/watch-login/watch-button.vue'; //button
+import { loginWithName } from '@/api/user.js';
+import { setUserToken, setAccountId } from '@/utils/token.js';
 
 export default {
   components: {
@@ -19,12 +21,16 @@ export default {
     return {
       logoImage: '',
       name: '',
+      userInfo: '',
       isRotate: false //是否加载旋转
     };
   },
-
+  onLoad(option) {
+    this.userInfo = option;
+    console.log(option); //打印出上个页面传递的参数。
+  },
   methods: {
-    startLogin() {
+    async startLogin() {
       //登录
       if (this.isRotate) {
         //判断是否加载中，避免重复点击请求
@@ -39,11 +45,17 @@ export default {
         return;
       }
       this.isRotate = true;
-      setTimeout(() => {
-        this.isRotate = false;
-      }, 3000);
+      const res = await loginWithName(this.userInfo.phone, this.userInfo.verCode, this.name);
+      uni.showToast({
+        icon: 'success',
+        position: 'bottom',
+        title: '注册成功'
+      });
+      // 保存用户信息
+      setUserToken(res.result.access_token);
+      setAccountId(res.result.account_id);
       uni.switchTab({
-        url: '/pages/home/index'
+        url: '/pages/my/index'
       });
     }
   }

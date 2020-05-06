@@ -20,6 +20,8 @@
   </view>
 </template>
 <script>
+import { getAccountId } from '@/utils/token.js';
+
 export default {
   data() {
     return {
@@ -34,11 +36,13 @@ export default {
   },
   methods: {
     init() {
+      const userPhone = getAccountId();
+      console.info('userPhone', userPhone);
       //用户信息
       this.userinfo = {
         face: '../../static/personalCenter/face.jpeg',
         username: '张浩然',
-        integral: '17762864299'
+        integral: userPhone
       };
     },
     //用户点击列表项
