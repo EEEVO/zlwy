@@ -20,14 +20,14 @@
   </view>
 </template>
 <script>
-import { getAccountId } from '@/utils/token.js';
+import { getUserToken, getAccountId } from '@/utils/token.js';
 
 export default {
   data() {
     return {
       isH5Plus: false,
       userinfo: {},
-      severList: [[{ name: '个人资料', icon: 'personalData.png' }, { name: '我的设备', icon: 'myDevice.png' }]]
+      severList: [[{ name: '个人资料', icon: 'personalData.png', link: '../userData/index' }, { name: '我的设备', icon: 'myDevice.png', link: '../myDevice/index' }]]
     };
   },
   onLoad() {
@@ -47,7 +47,16 @@ export default {
     },
     //用户点击列表项
     toPage(list_i, li_i) {
-      uni.showToast({ title: this.severList[list_i][li_i].name });
+      if (getUserToken()) {
+        uni.navigateTo({
+          url: this.severList[list_i][li_i].link
+        });
+      } else {
+        uni.showToast({ title: '当前未登录，为您跳转登录后使用' });
+        uni.navigateTo({
+          url: '../login/index'
+        });
+      }
     }
   }
 };

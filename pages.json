@@ -1,5 +1,10 @@
 {
   "pages": [{
+    "path": "pages/myDevice/index",
+    "style": {
+      "navigationBarTitleText": "我的设备"
+    }
+  }, {
     "path": "pages/home/index",
     "style": {
       "navigationBarTitleText": "智力微云"
@@ -18,6 +23,11 @@
     "path": "pages/addName/index",
     "style": {
       "navigationBarTitleText": "注册"
+    }
+  }, {
+    "path": "pages/userData/index",
+    "style": {
+      "navigationBarTitleText": "个人资料"
     }
   }],
   "tabBar": {
@@ -38,8 +48,8 @@
         "selectedIconPath": "static/tabbar/icon_my_EL.png"
       },
       {
-        "text": "登录",
-        "pagePath": "pages/login/index",
+        "text": "设备卡片",
+        "pagePath": "pages/myDevice/index",
         "iconPath": "static/tabbar/icon_my.png",
         "selectedIconPath": "static/tabbar/icon_my_EL.png"
       }
