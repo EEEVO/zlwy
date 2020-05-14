@@ -5,6 +5,7 @@
 			<view v-show="current === 0"><deviceCard v-for="(item, index) of currDeviceList" :key="index" :item="item"></deviceCard></view>
 			<view v-show="current === 1"><deviceCard v-for="(item, index) of currDeviceList" :key="index" :item="item"></deviceCard></view>
 		</view>
+		<ourLoading isFullScreen :active="httpStatus" text="loading..." />
 	</view>
 </template>
 
@@ -17,6 +18,7 @@ export default {
 	components: { uniSegmentedControl, deviceCard },
 	data() {
 		return {
+			httpStatus: true,
 			items: ['全部设备', '个人设备'],
 			current: 0,
 			currDeviceList: [] // 当前设备列表
@@ -32,6 +34,7 @@ export default {
 			this.current = e.currentIndex;
 		},
 		async listDevices() {
+			this.httpStatus = true;
 			const res = await listDevices(this.current);
 			this.currDeviceList = [
 				{
@@ -41,6 +44,9 @@ export default {
 					admin: '0'
 				}
 			];
+			setTimeout(() => {
+				this.httpStatus = false;
+			}, 700);
 			// this.currDeviceList = res.result;
 		}
 	},
