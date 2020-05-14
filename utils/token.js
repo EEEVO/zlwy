@@ -5,10 +5,14 @@ import {
 const TOKEN = 'TOKEN'
 const ACCOUNT_ID = 'ACCOUNT_ID'
 
+/**
+ * 用户登录信息模块
+ */
 export const setUserToken = (data) => dataStroage.setStroage(TOKEN, data)
 
-// 获取UserToken
 export const getUserToken = () => dataStroage.getStroage(TOKEN)
+
+export const removeUserToken = () => dataStroage.removeStroage(TOKEN)
 
 /**
  * 用户账户模块
