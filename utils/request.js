@@ -40,6 +40,9 @@ http.interceptor.response((response) => {
 	// 服务端返回的状态码不等于200，则reject()
 	if (response.data.code === 10004) {
 		removeUserToken()
+		uni.navigateTo({
+			url: '/pages/login/index.vue'
+		})
 	}
 	return response.data
 }, (response) => {

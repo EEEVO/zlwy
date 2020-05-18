@@ -1,13 +1,19 @@
 <template>
 	<view class="main">
-		<u-cell-group>
-			<u-cell-item title="数据质量" :value="dataQuality" :arrow="false" :center="true" :title-style="titleStyle" :value-style="titleStyle" @click="paramList">
-				<u-icon slot="right-icon" size="32" name="reload"></u-icon>
-			</u-cell-item>
-			<u-cell-item v-for="(item, index) of dataList" :key="index" :title="item.name" :value="item.param_value" :center="true" :arrow="false" :use-label-slot="true">
-				<view slot="label">更新时间{{ item.time }}</view>
-			</u-cell-item>
-		</u-cell-group>
+		<view class="data-content">
+			<u-cell-group>
+				<u-cell-item title="数据质量" :value="dataQuality" :arrow="false" :center="true" :title-style="titleStyle" :value-style="titleStyle" @click="paramList">
+					<u-icon slot="right-icon" size="32" name="reload"></u-icon>
+				</u-cell-item>
+				<u-cell-item v-for="(item, index) of dataList" :key="index" :title="item.name" :value="item.param_value" :center="true" :arrow="false" :use-label-slot="true">
+					<view slot="label">更新时间{{ item.time }}</view>
+				</u-cell-item>
+			</u-cell-group>
+		</view>
+		<view class="btn-content" v-if="admin === '1'">
+			<u-button type="primary" :custom-style="customStyle">历史数据</u-button>
+			<u-button type="success" :custom-style="customStyle">管理绑定人员</u-button>
+		</view>
 		<ourLoading isFullScreen :active="httpStatus" text="loading..." />
 	</view>
 </template>
@@ -17,25 +23,33 @@ import { deviceDetail, paramList } from '@/api/device.js';
 export default {
 	data() {
 		return {
+			customStyle: {
+				marginBottom: '10px'
+			},
 			httpStatus: true,
 			titleStyle: {
 				fontSize: '18px'
 			},
 			deviceId: '',
 			dataQuality: '差',
-			dataList: []
+			dataList: [],
+
+			acoounitList: [],
+			admin: '' // 0-无权限 1-权限
 		};
 	},
 	onLoad(option) {
 		this.deviceId = option.deviceId;
 	},
 	mounted() {
-		// this.deviceDetail();
+		this.deviceDetail();
 		this.paramList();
 	},
 	methods: {
 		async deviceDetail() {
 			const res = await deviceDetail(this.deviceId);
+			this.admin = res.result.admin;
+			this.acoounitList = res.result.acoounitList;
 		},
 		async paramList() {
 			this.httpStatus = true;
@@ -51,7 +65,17 @@ export default {
 </script>
 
 <style scoped lang="less">
-.dataQuality {
-	margin: 20px 22px;
+.main {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	// align-items: center;
+	justify-content: space-between;
+	.data-content {
+		flex: 1;
+	}
+	.btn-content {
+		padding: 0 20px;
+	}
 }
 </style>

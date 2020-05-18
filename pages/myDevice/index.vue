@@ -24,7 +24,7 @@ export default {
 			currDeviceList: [] // 当前设备列表
 		};
 	},
-	onLoad() {
+	onShow() {
 		//加载
 		this.listDevices();
 	},
@@ -36,18 +36,10 @@ export default {
 		async listDevices() {
 			this.httpStatus = true;
 			const res = await listDevices(this.current);
-			this.currDeviceList = [
-				{
-					id: '23445446',
-					name: '测试设备',
-					end_time: '2020-01-01',
-					admin: '0'
-				}
-			];
 			setTimeout(() => {
 				this.httpStatus = false;
 			}, 700);
-			// this.currDeviceList = res.result;
+			this.currDeviceList = res.result;
 		}
 	},
 	watch: {

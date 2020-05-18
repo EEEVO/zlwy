@@ -1,15 +1,25 @@
 import http from '@/utils/request.js'
 
 /**
+ * 添加设备
+ * @param {string}
+ */
+export const newBind = (device_id) => {
+	return http.post('/v1/device/newBind', {
+		device_id
+	})
+}
+
+/**
  * 查询设备列表
  * @param {string} admin 0-全部设备 1-我管理的设备
  */
 export const listDevices = (admin) => {
-  return http.get('v1/mine/listDevices', {
-    params: {
-      admin
-    }
-  })
+	return http.get('v1/mine/listDevices', {
+		params: {
+			admin
+		}
+	})
 }
 
 /**
@@ -17,11 +27,11 @@ export const listDevices = (admin) => {
  * @param {string} device_id 设备ID
  */
 export const deviceDetail = (device_id) => {
-  return http.get('v1/mine/deviceDetail', {
-    params: {
-      device_id
-    }
-  })
+	return http.get('v1/mine/deviceDetail', {
+		params: {
+			device_id
+		}
+	})
 }
 
 /**
@@ -29,9 +39,9 @@ export const deviceDetail = (device_id) => {
  * @param {string} device_id 设备ID
  */
 export const paramList = (device_id) => {
-  return http.get('v1/mine/paramList', {
-    params: {
-      device_id
-    }
-  })
+	return http.get('v1/mine/paramList', {
+		params: {
+			device_id
+		}
+	})
 }

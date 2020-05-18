@@ -37,7 +37,7 @@ export default {
   methods: {
     toDeviceInfo() {
       uni.navigateTo({
-        url: `./deviceInfo?deviceId=${this.item.id}`
+        url: `./deviceInfo?deviceId=${this.item.id}`,
       });
     },
     make() {
