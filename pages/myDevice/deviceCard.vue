@@ -6,6 +6,7 @@
       <view class="device-time">服务有效期至: {{ item.end_time }}</view>
     </view>
     <canvas
+      v-if="item.admin === 1"
       canvas-id="qrcode"
       style="height: 80px;
               width: 80px;"
@@ -37,7 +38,7 @@ export default {
   methods: {
     toDeviceInfo() {
       uni.navigateTo({
-        url: `./deviceInfo?deviceId=${this.item.id}`,
+        url: `./deviceInfo?deviceId=${this.item.id}`
       });
     },
     make() {
