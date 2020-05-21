@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@antv/f2": "^3.6.4-beta.4",
     "flyio": "^0.6.14"
   }
 }

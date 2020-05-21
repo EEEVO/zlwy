@@ -59,7 +59,7 @@ export const historyCond = (device_id) => {
 }
 
 /**
- * 获取者折线图数据
+ * 获取折线图数据
  * @param {string} device_id 设备ID
  */
 export const historyQuery = (device_id, duration, endTime, paramCode) => {
@@ -70,5 +70,16 @@ export const historyQuery = (device_id, duration, endTime, paramCode) => {
       endTime,
       paramCode
     }
+  })
+}
+
+/**
+ * 获取折线图数据
+ * @param {string} device_id 设备ID
+ */
+export const modifyBind = (device_id, uids) => {
+  return http.post('v1/device/modifyBind', {
+    device_id,
+    uids
   })
 }

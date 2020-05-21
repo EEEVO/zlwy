@@ -42,6 +42,11 @@
     "style": {
       "navigationBarTitleText": "历史数据"
     }
+  }, {
+    "path": "pages/myDevice/personnelManagement",
+    "style": {
+      "navigationBarTitleText": "人员管理"
+    }
   }],
   "tabBar": {
     "color": "#999",

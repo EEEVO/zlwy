@@ -14,7 +14,6 @@
       <u-button type="primary" :custom-style="customStyle" @click="goHistoryData">历史数据</u-button>
       <u-button type="success" :custom-style="customStyle" @click="managPersonnel">管理绑定人员</u-button>
     </view>
-    <u-action-sheet :list="acoounitList" v-model="show"></u-action-sheet>
     <ourLoading isFullScreen :active="httpStatus" text="loading..." />
   </view>
 </template>
@@ -27,24 +26,22 @@ export default {
       customStyle: {
         marginBottom: '10px'
       },
-      httpStatus: true,
       titleStyle: {
         fontSize: '18px'
       },
+      httpStatus: true,
       deviceId: '',
       dataQuality: '差',
       dataList: [],
 
-      acoounitList: [],
-      admin: '', // 0-无权限 1-权限
-
-      show: false
+      accountList: [],
+      admin: '' // 0-无权限 1-权限
     };
   },
   onLoad(option) {
     this.deviceId = option.deviceId;
   },
-  mounted() {
+  onShow() {
     this.deviceDetail();
     this.paramList();
   },
@@ -55,12 +52,14 @@ export default {
       });
     },
     managPersonnel() {
-      this.show = true;
+      uni.navigateTo({
+        url: `./personnelManagement?accountList=${JSON.stringify(this.accountList)}&deviceId=${this.deviceId}`
+      });
     },
     async deviceDetail() {
       const res = await deviceDetail(this.deviceId);
       this.admin = res.result.admin;
-      this.acoounitList = res.result.acoounitList;
+      this.accountList = res.result.accountList;
     },
     async paramList() {
       this.httpStatus = true;
