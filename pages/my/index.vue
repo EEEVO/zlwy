@@ -20,14 +20,18 @@
   </view>
 </template>
 <script>
-import { getUserToken, getAccountId } from '@/utils/token.js';
+import { getUserToken, getAccountId, removeUserToken } from '@/utils/token.js';
+import { dataStroage } from '@/utils/common.js';
 
 export default {
   data() {
     return {
       isH5Plus: false,
       userinfo: {},
-      severList: [[{ name: '个人资料', icon: 'personalData.png', link: '../userData/index' }, { name: '我的设备', icon: 'myDevice.png', link: '../myDevice/index' }]]
+      severList: [
+        [{ name: '个人资料', icon: 'personalData.png', link: '../userData/index' }, { name: '我的设备', icon: 'myDevice.png', link: '../myDevice/index' }],
+        [{ name: '退出', icon: 'personalData.png', link: 'logout' }]
+      ]
     };
   },
   onLoad() {
@@ -47,6 +51,13 @@ export default {
     },
     //用户点击列表项
     toPage(list_i, li_i) {
+      if (this.severList[list_i][li_i].link === 'logout') {
+        dataStroage.closeAllStroage();
+        uni.navigateTo({
+          url: '../login/index'
+        });
+        return;
+      }
       if (getUserToken()) {
         uni.navigateTo({
           url: this.severList[list_i][li_i].link
