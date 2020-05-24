@@ -2,13 +2,12 @@
   <view>
     <view class="header" v-bind:class="{ status: isH5Plus }">
       <view class="userinfo">
-        <view class="face"><image :src="userinfo.face"></image></view>
-        <view class="info">
+        <view class="info" v-if="isLogin">
           <view class="username">{{ userinfo.username }}</view>
           <view class="integral">{{ userinfo.integral }}</view>
         </view>
+        <u-button v-else @click.native="login">点击登录</u-button>
       </view>
-      <!-- <view class="setting"><image src="../../static/personalCenter/scanCode.png"></image></view> -->
     </view>
     <view class="list" v-for="(list, list_i) in severList" :key="list_i">
       <view class="li" v-for="(li, li_i) in list" @tap="toPage(list_i, li_i)" :class="{ noborder: li_i == list.length - 1 }" hover-class="hover" :key="li.name">
@@ -22,10 +21,12 @@
 <script>
 import { getUserToken, getAccountId, removeUserToken } from '@/utils/token.js';
 import { dataStroage } from '@/utils/common.js';
+import { getDetail } from '@/api/user.js';
 
 export default {
   data() {
     return {
+      isLogin: true,
       isH5Plus: false,
       userinfo: {},
       severList: [
@@ -34,20 +35,28 @@ export default {
       ]
     };
   },
-  onLoad() {
-    //加载
+  onShow() {
+    console.log('onShow');
     this.init();
   },
   methods: {
-    init() {
-      const userPhone = getAccountId();
-      console.info('userPhone', userPhone);
-      //用户信息
-      this.userinfo = {
-        face: '../../static/personalCenter/face.jpeg',
-        username: '张浩然',
-        integral: userPhone
-      };
+    async init() {
+      const res = await getDetail();
+      if (res.code === 200) {
+        this.userinfo = {
+          face: res.result.phone,
+          username: res.result.nick_name,
+          integral: res.result.account_id
+        };
+        this.isLogin = true;
+      } else {
+        this.isLogin = false;
+      }
+    },
+    login() {
+      uni.navigateTo({
+        url: '../login/index'
+      });
     },
     //用户点击列表项
     toPage(list_i, li_i) {
@@ -169,5 +178,13 @@ page {
       height: 40upx;
     }
   }
+}
+
+.wbutton {
+  height: 90upx;
+  width: 260upx;
+  // /deep/ .dlbutton {
+
+  // }
 }
 </style>

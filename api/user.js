@@ -38,3 +38,21 @@ export const loginWithName = (phoneNo, verificationMsg, nick_name) => {
     nick_name
   })
 }
+
+/**
+ * 修改账户属性
+ * @param {string} nick_name 用户名
+ */
+export const updateProperty = (nick_name) => {
+  return http.post('v1/account/updateProperty', {
+    nick_name
+  })
+}
+
+/**
+ * 获取账号详情
+ * @param {string} nick_name 用户名
+ */
+export const getDetail = () => {
+  return http.get('v1/account/getDetail')
+}

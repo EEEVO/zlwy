@@ -70,7 +70,7 @@ export default {
         series: [
           {
             name: this.param,
-            data: res.result.chartData.series[0].data,
+            data: res.result.chartData.series[0].data.map(item => `${item}`),
             color: '#000000'
           }
         ]
@@ -78,7 +78,8 @@ export default {
       this.showLineA('canvasLineA', LineA);
     },
     showLineA(canvasId, chartData) {
-      canvaLineA = new uCharts({
+      console.log(this.pixelRatio, chartData.categories, chartData.series, this.cWidth * this.pixelRatio, this.cHeight * this.pixelRatio);
+      const paras = {
         $this: this,
         canvasId: canvasId,
         type: 'line',
@@ -97,10 +98,7 @@ export default {
           gridColor: '#CCCCCC',
           gridType: 'dash',
           rotateLabel: true,
-          // scrollShow: true,
-          // scrollAlign: 'left', //滚动条初始位置
-          // scrollBackgroundColor: '#F7F7FF', //默认为 #EFEBEF
-          // scrollColor: '#DEE7F7' //默认为 #A6A6A6
+          fontSize: '0'
         },
         yAxis: {
           gridType: 'dash',
@@ -113,11 +111,12 @@ export default {
             type: 'straight'
           }
         }
-      });
+      };
+      canvaLineA = new uCharts(paras);
     },
     touchLineA(e) {
       canvaLineA.showToolTip(e, {
-        format: function(item, category) {
+        format(item, category) {
           return category + ' ' + item.name + ':' + item.data;
         }
       });

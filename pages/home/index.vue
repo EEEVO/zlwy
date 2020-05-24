@@ -47,9 +47,7 @@ export default {
         icon: 'none',
         title: res.message
       });
-      setTimeout(() => {
-        this.isRotate = false;
-      }, 3000);
+      this.isRotate = false;
     },
     scanCode() {
       // 允许从相机和相册扫码
