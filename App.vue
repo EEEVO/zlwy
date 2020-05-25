@@ -4,15 +4,15 @@ export default {
   onLaunch() {
     console.log('App Launch');
   },
-  onShow() {
-    let userInfo = getUserToken();
-    if (!userInfo) {
-      uni.reLaunch({
-        url: './pages/login/index'
-      });
-    }
-    console.log('App Show');
-  },
+  // onShow() {
+  //   let userInfo = getUserToken();
+  //   if (!userInfo) {
+  //     uni.reLaunch({
+  //       url: './pages/login/index'
+  //     });
+  //   }
+  //   console.log('App Show');
+  // },
   onHide() {
     console.log('App Hide');
   }
