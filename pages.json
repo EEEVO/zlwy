@@ -3,6 +3,11 @@
     "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
   },
   "pages": [{
+    "path": "pages/home/index",
+    "style": {
+      "navigationBarTitleText": "添加设备"
+    }
+  }, {
     "path": "pages/my/index",
     "style": {
       "navigationBarTitleText": "我的"
@@ -11,11 +16,6 @@
     "path": "pages/myDevice/index",
     "style": {
       "navigationBarTitleText": "我的设备"
-    }
-  }, {
-    "path": "pages/home/index",
-    "style": {
-      "navigationBarTitleText": "智力微云"
     }
   }, {
     "path": "pages/login/index",
@@ -54,7 +54,7 @@
     "selectedColor": "#597ef7",
     "borderStyle": "white",
     "list": [{
-        "text": "首页",
+        "text": "添加设备",
         "pagePath": "pages/home/index",
         "iconPath": "static/tabbar/icon_home.png",
         "selectedIconPath": "static/tabbar/icon_home_EL.png"
