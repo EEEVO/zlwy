@@ -30,8 +30,9 @@ export default {
       isH5Plus: false,
       userinfo: {},
       severList: [
-        [{ name: '个人资料', icon: 'personalData.png', link: '../userData/index' }, { name: '我的设备', icon: 'myDevice.png', link: '../myDevice/index' }],
-        [{ name: '退出', icon: 'personalData.png', link: 'logout' }]
+        [{ name: '个人资料', icon: 'personalData.png', link: '../userData/index' }, 
+			{ name: '我的设备', icon: 'myDevice.png', link: '../myDevice/index' }],
+        [{ name: '退出', icon: 'logout.png', link: 'logout' }]
       ]
     };
   },
