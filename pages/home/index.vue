@@ -82,7 +82,6 @@ export default {
 <style scoped lang="less">
 @import url('@/styles/index.less');
 @import url('@/components/watch-login/css/icon.css');
-
 @paddingLR: 70upx;
 
 .content {

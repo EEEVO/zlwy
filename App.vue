@@ -5,13 +5,13 @@ export default {
     console.log('App Launch');
   },
   onShow() {
-    let userInfo = getUserToken();
-    if (!userInfo) {
-      uni.reLaunch({
-        url: './pages/login/index'
-      });
-    }
-    console.log('App Show');
+    // let userInfo = getUserToken();
+    // if (!userInfo) {
+    //   uni.reLaunch({
+    //     url: './pages/login/index'
+    //   });
+    // }
+    // console.log('App Show');
   },
   onHide() {
     console.log('App Hide');

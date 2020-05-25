@@ -46,17 +46,25 @@ export default {
       }
       this.isRotate = true;
       const res = await loginWithName(this.userInfo.phone, this.userInfo.verCode, this.name);
-      uni.showToast({
-        icon: 'success',
-        position: 'bottom',
-        title: '注册成功'
-      });
-      // 保存用户信息
-      setUserToken(res.result.access_token);
-      setAccountId(res.result.account_id);
-      uni.switchTab({
-        url: '/pages/my/index'
-      });
+	  if (res.code === 200) {
+	    uni.showToast({
+	      icon: 'success',
+	      position: 'bottom',
+	      title: '注册成功'
+	    });
+	    // 保存用户信息
+	    setUserToken(res.result.access_token);
+	    setAccountId(res.result.account_id);
+	    uni.switchTab({
+	      url: '/pages/my/index'
+	    });
+	  } else {
+	    uni.showToast({
+	      icon: '',
+	      position: 'bottom',
+	      title: res.message
+	    });
+	  }
     }
   }
 };
