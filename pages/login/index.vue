@@ -94,26 +94,26 @@ export default {
       } else {
         // 不需要设置用户名
         const res = await login(this.phoneData, this.verCode);
-		if (res.code === 200) {
-		  uni.showToast({
-		    icon: 'success',
-		    position: 'bottom',
-		    title: '登录成功'
-		  });
-		  // 保存用户信息
-		  setUserToken(res.result.access_token);
-		  console.log('存储token');
-		  setAccountId(res.result.account_id);
-		  uni.switchTab({
-		    url: '/pages/my/index'
-		  });
-		} else {
-		  uni.showToast({
-		    icon: '',
-		    position: 'bottom',
-		    title: res.message
-		  });
-		}
+        if (res.code === 200) {
+          uni.showToast({
+            icon: 'success',
+            position: 'bottom',
+            title: '登录成功'
+          });
+          // 保存用户信息
+          setUserToken(res.result.access_token);
+          setAccountId(res.result.account_id);
+          uni.switchTab({
+            url: '/pages/my/index'
+          });
+        } else {
+          this.isRotate = false;
+          uni.showToast({
+            icon: '',
+            position: 'bottom',
+            title: res.message
+          });
+        }
       }
     },
     login_weixin() {

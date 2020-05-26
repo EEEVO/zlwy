@@ -34,46 +34,46 @@ export default {
         //判断是否加载中，避免重复点击请求
         return false;
       }
-	  if (getUserToken()) {
-	    if (this.deviceId.length === '') {
-	      uni.showToast({
-	        icon: 'none',
-	        position: 'bottom',
-	        title: '设备号必须填写'
-	      });
-	      return;
-	    }
-	    this.isRotate = true;
-	    const res = await newBind(this.deviceId);
-	    uni.showToast({
-	      icon: 'none',
-	      title: res.message
-	    });
-	    this.isRotate = false;
-	  } else {
-	    uni.showToast({ title: '当前未登录，为您跳转登录后使用' });
-	    uni.navigateTo({
-	      url: '../login/index'
-	    });
-	  }
+      if (getUserToken()) {
+        if (this.deviceId.length === '') {
+          uni.showToast({
+            icon: 'none',
+            position: 'bottom',
+            title: '设备号必须填写'
+          });
+          return;
+        }
+        this.isRotate = true;
+        const res = await newBind(this.deviceId);
+        uni.showToast({
+          icon: 'none',
+          title: res.message
+        });
+        this.isRotate = false;
+      } else {
+        uni.showToast({ title: '当前未登录，为您跳转登录后使用' });
+        uni.navigateTo({
+          url: '../login/index'
+        });
+      }
     },
     scanCode() {
-		if (getUserToken()) {
-		  // 允许从相机和相册扫码
-		  uni.scanCode({
-		    success(res) {
-		      this.deviceId = res.result;
-		      if (this.deviceId) {
-		        this.addDevice();
-		      }
-		    }
-		  });
-		} else {
-		  uni.showToast({ title: '当前未登录，为您跳转登录后使用' });
-		  uni.navigateTo({
-		    url: '../login/index'
-		  });
-		}
+      if (getUserToken()) {
+        // 允许从相机和相册扫码
+        uni.scanCode({
+          success: res => {
+            this.deviceId = res.result;
+            if (this.deviceId) {
+              this.addDevice();
+            }
+          }
+        });
+      } else {
+        uni.showToast({ title: '当前未登录，为您跳转登录后使用' });
+        uni.navigateTo({
+          url: '../login/index'
+        });
+      }
     }
   }
 };
