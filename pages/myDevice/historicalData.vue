@@ -13,8 +13,8 @@
       <u-field @click="showAction('param', 'paramList')" v-model="param" :disabled="true" label="参数" placeholder="请选择参数" right-icon="arrow-down-fill"></u-field>
     </u-cell-group>
     <view class="qiun-charts"><canvas canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas></view>
-    <u-action-sheet :list="selectList" @click="actionClick" v-model="show"></u-action-sheet>
-    <u-picker v-model="dateShow" mode="time" :params="configuration" @confirm="pickerClick"></u-picker>
+    <cover-view><u-action-sheet :list="selectList" @click="actionClick" v-model="show"></u-action-sheet></cover-view>
+    <cover-view><u-picker v-model="dateShow" mode="time" :params="configuration" @confirm="pickerClick"></u-picker></cover-view>
   </view>
 </template>
 

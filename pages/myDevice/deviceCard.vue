@@ -6,31 +6,19 @@
         <!-- <view class="device-time">设备编号：{{ item.id }}</view> -->
         <view class="device-time">服务有效期至: {{ item.end_time }}</view>
       </view>
-      <canvas
-        v-if="item.admin === 1"
-        @tap.stop="imgClick"
-        canvas-id="qrcode"
-        style="height: 80px;
-              width: 80px;"
-      />
+      <tki-qrcode @click.native.stop="imgClick" @result="result" v-if="item.admin === 1" ref="qrcode" :cid="item.id" :val="item.id" loadMake :size="70" unit="px" />
     </view>
     <u-mask :show="show" @click="show = false">
-      <view class="warp">
-        <canvas
-          canvas-id="maxQrcode"
-          style="height: 200px;
-  				  width: 200px;
-  				  "
-        />
-      </view>
+      <view class="warp"><image :src="curUrl"></image></view>
     </u-mask>
   </view>
 </template>
 
 <script>
-import uQRCode from '@/js-sdk/Sansnn-uQRCode/uqrcode.js';
+import tkiQrcode from '@/components/tki-qrcode/tki-qrcode.vue';
 
 export default {
+  components: { tkiQrcode },
   props: {
     item: {
       type: Object,
@@ -47,49 +35,21 @@ export default {
   },
   data() {
     return {
+      curUrl: '',
       show: false
     };
   },
-  mounted() {
-    this.make();
-  },
   methods: {
     imgClick() {
-      console.log('点击二维码');
+      console.log('11111’');
       this.show = true;
-      uQRCode.make({
-        canvasId: 'maxQrcode',
-        componentInstance: this,
-        text: this.item.id,
-        size: 200,
-        backgroundColor: '#ffffff',
-        foregroundColor: '#000000',
-        fileType: 'png',
-        correctLevel: uQRCode.defaults.correctLevel,
-        success: res => {
-          console.log(res);
-        }
-      });
+    },
+    result(res) {
+      this.curUrl = res;
     },
     toDeviceInfo() {
       uni.navigateTo({
         url: `./deviceInfo?deviceId=${this.item.id}`
-      });
-    },
-    make() {
-      uQRCode.make({
-        canvasId: 'qrcode',
-        componentInstance: this,
-        text: this.item.id,
-        size: 80,
-        margin: 10,
-        backgroundColor: '#ffffff',
-        foregroundColor: '#000000',
-        fileType: 'png',
-        correctLevel: uQRCode.defaults.correctLevel,
-        success: res => {
-          console.log(res);
-        }
       });
     }
   }
@@ -133,5 +93,9 @@ export default {
   align-items: center;
   justify-content: center;
   height: 100%;
+  image {
+    width: 70vw;
+    height: 70vw;
+  }
 }
 </style>
