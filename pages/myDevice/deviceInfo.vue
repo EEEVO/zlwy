@@ -11,8 +11,13 @@
 			</u-cell-group>
 		</view>
 		<view class="btn-content" v-if="admin === '1'">
-			<u-button type="primary" :custom-style="customStyle" @click="goHistoryData">历史数据</u-button>
 			<u-button type="success" :custom-style="customStyle" @click="managPersonnel">管理绑定人员</u-button>
+		</view>
+		<view class="btn-content" v-if="history_flag === '2'">
+			<u-button type="primary" :custom-style="customStyle" @click="goHistoryData">历史数据</u-button>
+		</view>
+		<view class="btn-content" v-if="history_flag === '1' && admin === '1'">
+			<u-button type="primary" :custom-style="customStyle" @click="goHistoryData">历史数据</u-button>
 		</view>
 		<ourLoading isFullScreen :active="httpStatus" text="loading..." />
 	</view>
@@ -36,7 +41,8 @@ export default {
 			dataList: [],
 
 			accountList: [],
-			admin: '' // 0-无权限 1-权限
+			admin: '', // 0-无权限 1-权限
+			history_flag: '' //历史数据查看权限，1仅管理员可看，2所有用户可看
 		};
 	},
 	onLoad(option) {
@@ -73,6 +79,7 @@ export default {
 			const res = await deviceDetail(this.deviceId);
 			this.admin = res.result.admin;
 			this.accountList = res.result.accountList;
+			this.history_flag = res.result.history_flag;
 			this.httpStatus = false;
 		},
 		async paramList() {
