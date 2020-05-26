@@ -2,7 +2,7 @@
 	<view class="main" @click="toDeviceInfo">
 		<view class="text-content">
 			<view class="device-name">{{ item.name }}</view>
-			<view class="device-time">设备编号：{{ item.id }}</view>
+			<!-- <view class="device-time">设备编号：{{ item.id }}</view> -->
 			<view class="device-time">服务有效期至: {{ item.end_time }}</view>
 		</view>
 		<canvas
