@@ -7,7 +7,7 @@ import {
 const http = new Request();
 
 http.setConfig((config) => {
-  config.baseUrl = 'https://zinlin.cn/zleq/';
+  config.baseUrl = 'https://wx.zinlin.cn/zleq/';
   return config
 })
 
