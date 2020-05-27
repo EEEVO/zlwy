@@ -41,7 +41,6 @@ export default {
   },
   methods: {
     imgClick() {
-      console.log('11111’');
       this.show = true;
     },
     result(res) {

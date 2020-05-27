@@ -42,7 +42,7 @@ export default {
     this.$refs.uTips.show({
       title: '滑动人员模块进行删除 ',
       type: 'success',
-      duration: '5000'
+      duration: '2000'
     });
   },
   methods: {

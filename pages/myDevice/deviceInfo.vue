@@ -2,14 +2,14 @@
   <view class="main">
     <view class="data-content">
       <u-cell-group>
-        <u-cell-item title="数据质量" :arrow="false" :center="true" :title-style="titleStyle" :value-style="titleStyle" @click="update">
+        <u-cell-item :arrow="false" :title="deviceName" :center="true" :title-style="titleStyle" @click="update">
           <view slot="right-icon" class="title">
-            <u-icon size="40" name="reload"></u-icon>
-            <u-tag :text="dataQuality" mode="dark" :type="type" />
+            <view slot="label">数据质量：<u-tag :text="dataQuality" mode="dark" :type="type" /><u-icon size="40" name="reload"></u-icon></view>
           </view>
         </u-cell-item>
         <u-cell-item v-for="(item, index) of dataList" :key="index" :title="item.name" :value="item.param_value" :center="true" :arrow="false" :use-label-slot="true">
-          <view slot="label">更新时间{{ item.time }}</view>
+		  <u-icon slot="icon" size="34" name="tags" color="#2f54eb"></u-icon>
+          <view slot="label">刷新时间：{{ item.time }}</view>
         </u-cell-item>
       </u-cell-group>
     </view>
@@ -30,13 +30,14 @@ export default {
         marginBottom: '10px'
       },
       titleStyle: {
-        fontSize: '18px'
+        fontSize: '16px'
       },
       httpStatus: true,
       deviceId: '',
       dataQuality: '差',
       dataList: [],
 
+	  deviceName: '',
       accountList: [],
       admin: '', // 0-无权限 1-权限
       history_flag: '' //历史数据查看权限，1仅管理员可看，2所有用户可看
@@ -64,7 +65,7 @@ export default {
     type() {
       switch (this.dataQuality) {
         case '差':
-          return 'error';
+          return 'warning';
         case '良好':
           return 'success';
       }
@@ -87,6 +88,7 @@ export default {
       this.admin = res.result.admin;
       this.accountList = res.result.accountList;
       this.history_flag = res.result.history_flag;
+	  this.deviceName = res.result.name;
       this.httpStatus = false;
     },
     update() {
@@ -126,7 +128,7 @@ export default {
     flex-direction: row-reverse;
   }
   /deep/.u-cell__value {
-    font-size: 24px;
+    font-size: 16px;
     display: flex;
     align-items: center;
     flex-direction: row-reverse;
