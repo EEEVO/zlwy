@@ -1,7 +1,7 @@
 <template>
   <view>
     <u-cell-group>
-      <u-swipe-action :show="item.show" :index="index" v-for="(item, index) in accountList" :key="item.id" @click="click" :options="options">
+      <u-swipe-action :show="item.show" :index="index" v-for="(item, index) in accountList" :key="item.id" @click="click" :options="options" :vibrate-short="true">
         <u-cell-item :title="item.title" :value="item.account_id" :arrow="false"></u-cell-item>
       </u-swipe-action>
     </u-cell-group>
@@ -28,7 +28,6 @@ export default {
     };
   },
   onLoad(option) {
-    console.log(option);
     this.deviceId = option.deviceId;
     this.accountList = JSON.parse(option.accountList).map(item => {
       return {

@@ -5,7 +5,7 @@ import http from '@/utils/request.js'
  * @param {string}
  */
 export const newBind = (device_id) => {
-  return http.post('/v1/device/newBind', {
+  return http.post('v1/device/newBind', {
     device_id
   })
 }
@@ -19,6 +19,16 @@ export const listDevices = (admin) => {
     params: {
       admin
     }
+  })
+}
+
+/**
+ * 删除设备
+ * @param {string}
+ */
+export const delDevice = (device_id) => {
+  return http.post('/v1/device/delDevice', {
+    device_id
   })
 }
 
