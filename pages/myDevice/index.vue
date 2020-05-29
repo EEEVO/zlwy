@@ -3,7 +3,7 @@
     <u-sticky offset-top="0">
       <uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="text" active-color="#597ef7"></uni-segmented-control>
     </u-sticky>
-    <deviceCard v-for="(item, index) of currDeviceList" :key="index" :item="item" @del="delDevice"></deviceCard>
+    <deviceCard v-for="(item, index) of currDeviceList" :key="item.id" :item="item" @del="delDevice"></deviceCard>
     <ourLoading isFullScreen :active="httpStatus" text="loading..." />
   </view>
 </template>
@@ -30,24 +30,17 @@ export default {
   methods: {
     onClickItem(e) {
       this.current = e.currentIndex;
+      const a = {};
+      a = {};
     },
-    toDeviceInfo() {
-      uni.navigateTo({
-        url: `./deviceInfo?deviceId=${this.item.id}`
-      });
-    },
+
     async listDevices() {
       this.httpStatus = true;
       const res = await listDevices(this.current);
       setTimeout(() => {
         this.httpStatus = false;
       }, 700);
-      this.currDeviceList = res.result.map(item => {
-        return {
-          ...item,
-          show: false
-        };
-      });
+      this.currDeviceList = res.result;
     },
     delDevice() {
       this.listDevices();

@@ -1,6 +1,6 @@
 <template>
   <view>
-    <u-swipe-action :show="item.show" @click="click" @content-click="toDeviceInfo" :options="options" :vibrate-short="true">
+    <u-swipe-action @click="click" @content-click="toDeviceInfo" :options="options" :vibrate-short="true">
       <view class="main">
         <view class="text-content">
           <view class="device-name">{{ item.name }}</view>
