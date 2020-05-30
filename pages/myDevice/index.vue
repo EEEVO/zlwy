@@ -30,8 +30,6 @@ export default {
   methods: {
     onClickItem(e) {
       this.current = e.currentIndex;
-      const a = {};
-      a = {};
     },
 
     async listDevices() {
