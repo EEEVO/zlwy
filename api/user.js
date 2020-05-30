@@ -56,3 +56,17 @@ export const updateProperty = (nick_name) => {
 export const getDetail = () => {
   return http.get('v1/account/getDetail')
 }
+
+//查询待管理的人员列表
+export const sendGetManagerUserList= params=>{
+	return http.get('/v1/mine/mangeUserList',{params:params})
+}
+
+//审批绑定申请
+export const sendAuditBindRequest= (device_id,account_id,auditFlag)=>{
+	return http.post('/v1/mine/auditBind',{
+		device_id,
+		account_id,
+		auditFlag
+	})
+}
