@@ -12,11 +12,12 @@
       <u-field @click="showPicker" v-model="endTime" :disabled="true" label="截止时间" placeholder="请选择截止时间" right-icon="arrow-down-fill"></u-field>
       <u-field @click="showAction('param', 'paramList')" v-model="param" :disabled="true" label="参数" placeholder="请选择参数" right-icon="arrow-down-fill"></u-field>
     </u-cell-group>
-    <view class="qiun-charts"><canvas canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas></view>
-<!--    <cover-view><u-action-sheet :list="selectList" @click="actionClick" v-model="show"></u-action-sheet></cover-view>
-    <cover-view><u-picker v-model="dateShow" mode="time" :params="configuration" @confirm="pickerClick"></u-picker></cover-view> -->
-	<u-action-sheet :list="selectList" @click="actionClick" v-model="show"></u-action-sheet>
-	<u-picker v-model="dateShow" mode="time" :params="configuration" @confirm="pickerClick"></u-picker>
+    <view class="qiun-charts">
+      <canvas v-if="radarImgShow" canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas>
+      <image v-else :src="radarImg"></image>
+    </view>
+    <u-action-sheet :list="selectList" @click="actionClick" v-model="show"></u-action-sheet>
+    <u-picker v-model="dateShow" mode="time" :params="configuration" @confirm="pickerClick"></u-picker>
   </view>
 </template>
 
@@ -54,7 +55,8 @@ export default {
 
       cWidth: '',
       cHeight: '',
-      pixelRatio: 1
+      pixelRatio: 1,
+      radarImg: '' //canvas的临时图片
     };
   },
   onLoad(option) {
@@ -63,9 +65,24 @@ export default {
     this.deviceId = option.deviceId;
     this.historyCond();
   },
+  computed: {
+    radarImgShow() {
+      this.createCanvasImg();
+      if (this.show || this.dateShow) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  },
+  watch: {
+    radarImgShow() {
+      this.historyQuery();
+    }
+  },
   methods: {
+    // 请求折线图数据
     async historyQuery() {
-      console.log(this.deviceId, this.durationCode, this.endTime, this.paramCode);
       const res = await historyQuery(this.deviceId, this.durationCode, this.endTime, this.paramCode);
       let LineA = {
         categories: res.result.chartData.categories,
@@ -80,7 +97,6 @@ export default {
       this.showLineA('canvasLineA', LineA);
     },
     showLineA(canvasId, chartData) {
-      console.log(this.pixelRatio, chartData.categories, chartData.series, this.cWidth * this.pixelRatio, this.cHeight * this.pixelRatio);
       const paras = {
         $this: this,
         canvasId: canvasId,
@@ -132,9 +148,23 @@ export default {
       this.selectKey = key;
       this.show = true;
     },
+    // 根据canvas生成图片,绕过canvas在微信小程序内始终只能显示在最上层的问题
+    createCanvasImg() {
+      wx.canvasToTempFilePath({
+        x: 0,
+        y: 0,
+        width: 750,
+        height: 500,
+        canvasId: 'canvasLineA',
+        success: res => {
+          this.radarImg = res.tempFilePath;
+        }
+      });
+    },
     showPicker() {
       this.dateShow = true;
     },
+    // 获取查询历史条件数据
     async historyCond() {
       const res = await historyCond(this.deviceId);
       this.durationList = res.result.durationList.map(item => {
@@ -168,11 +198,15 @@ export default {
   width: 750upx;
   height: 500upx;
   background-color: #ffffff;
-}
 
-.charts {
-  width: 750upx;
-  height: 500upx;
-  background-color: #ffffff;
+  .charts {
+    width: 750upx;
+    height: 500upx;
+    background-color: #ffffff;
+  }
+  image {
+    width: 750upx;
+    height: 500upx;
+  }
 }
 </style>

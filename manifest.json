@@ -44,10 +44,10 @@
     "mp-weixin" : {
         "appid" : "wx6a4042bfa2db234b",
         "setting" : {
-            "urlCheck" : false,
+            "urlCheck" : true,
             "es6" : true,
             "postcss" : true,
-            "minified" : true
+            "minified" : false
         },
         "permission" : {},
         "optimization" : {
