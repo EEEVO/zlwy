@@ -5,6 +5,7 @@
     </u-sticky>
     <deviceCard v-for="(item, index) of currDeviceList" :key="item.id" :item="item" @del="delDevice"></deviceCard>
     <ourLoading isFullScreen :active="httpStatus" text="loading..." />
+	<u-top-tips ref="uTips"></u-top-tips>
   </view>
 </template>
 
@@ -26,6 +27,13 @@ export default {
   onShow() {
     //加载
     this.listDevices();
+  },
+  mounted() {
+  	this.$refs.uTips.show({
+  		title: '滑动设备模块进行删除 ',
+  		type: 'success',
+  		duration: '2000'
+  	});
   },
   methods: {
     onClickItem(e) {

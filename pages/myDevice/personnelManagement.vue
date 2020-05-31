@@ -1,28 +1,29 @@
 <template>
-	<view class="wrap">
-        <u-tabs :list="tab_list" :is-scroll="true" :current="current" @change="change"></u-tabs>
-        	<view v-show="current==0">
-        		<u-cell-group>
-        		<u-swipe-action :show="false" :index="index" v-for="(item, index) in bindedUsers" :key="item.account_id" @click="click" :options="options" :vibrate-short="true">
-        		   <u-cell-item :title="item.nick_name" :value="item.account_id" :arrow="false"></u-cell-item>
-        		</u-swipe-action>
-        		</u-cell-group>
-        	</view>
-        	<view v-show="current==1">
-        		<view  @click="hanlderThe(item)" v-for="(item,index) in waitBindingUsers">
-        			<u-row gutter="16">
-        				<u-col span="8">
-        					<div >{{item.nick_name}}</div>	
-        				</u-col>
-        				<u-col span="2">
-							<u-button size="mini" @click="handleAgree(item.account_id)">同意</u-button>
-        				</u-col>
-        				<u-col span="2">
-        					<u-button size="mini" @click="handleDegree(item.account_id)">拒绝</u-button>
-        				</u-col>
-        			</u-row>
-        		</view>
-			</view>
+	<view>
+		<u-sticky offset-top="0">
+			<uni-segmented-control :current="current" :values="items" @clickItem="onClickItem" style-type="text" active-color="#597ef7"></uni-segmented-control>
+		</u-sticky>
+		<view v-show="current==0">
+			<u-cell-group>
+				<u-cell-item v-for="(item, index) of bindedUsers" :key="index" :center="true" :arrow="false" :use-label-slot="true">
+					<view slot="label">{{item.nick_name}} {{ item.account_id }}</view>
+					<view slot="right-icon">
+						<u-button size="mini" @click="handleDel(item.account_id)">删除</u-button>
+					</view>
+				</u-cell-item>
+			</u-cell-group>
+		</view>
+		<view v-show="current==1">
+			<u-cell-group>
+				<u-cell-item v-for="(item, index) of waitBindingUsers" :key="index" :center="true" :arrow="false" :use-label-slot="true">
+					<view slot="label">{{item.nick_name}} {{ item.account_id }}</view>
+					<view slot="right-icon">
+						<u-button size="mini" @click="handleAgree(item.account_id)">同意</u-button>
+						<u-button size="mini" @click="handleDegree(item.account_id)" style="margin-left: 15upx;">拒绝</u-button>
+					</view>
+				</u-cell-item>
+			</u-cell-group>
+		</view>
         <u-top-tips ref="uTips"></u-top-tips>
     </view>
 </template>
@@ -30,20 +31,18 @@
 <script>
 import { modifyBind } from '@/api/device.js';
 import {sendGetManagerUserList, sendAuditBindRequest} from '@/api/user.js'
+import uniSegmentedControl from '@/components/uni-segmented-control/uni-segmented-control.vue';
 
 export default {
+	components: { uniSegmentedControl },
 	data() {
 		return {
 			current:0,
-			tab_list:[
-			{name:"已绑定"},
-			{name:"待确认"},
-			],
+			items:['已绑定', '待确认'],
 			
 			//待绑定的用户列表
 			waitBindingUsers:[],
 			bindedUsers:[],
-			
 			
 			deviceId: '',
 			options: [
@@ -59,15 +58,13 @@ export default {
 		this.deviceId = option.deviceId;
 	},
 	mounted() {
-		this.$refs.uTips.show({
-			title: '滑动人员模块进行删除 ',
-			type: 'success',
-			duration: '2000'
-		});
 		this.getBindedUserList()
 		this.getWaitBindUserList()
 	},
 	methods: {
+		onClickItem(e) {
+		  this.current = e.currentIndex;
+		},
 		handleDegree:function(account_id){
 			console.log("handleDegree" + account_id);
 			this.handleCommitBind(this.deviceId, account_id, 2)
@@ -127,18 +124,13 @@ export default {
 				}
 			});
 		},
-		
-		change(index) {
-	  		this.current = index;
-			console.log(this.current);
-	  	},
-		async click(index) {
-			const uids = [this.bindedUsers[index].account_id];
+		async handleDel(account_id) {
+			const uids = [account_id];
 			const res = await modifyBind(this.deviceId, uids);
 			
 			if (res.code === 200) {
 				this.$u.toast('删除成功');
-				this.bindedUsers.splice(index, 1);
+				this.getBindedUserList();
 			} else {
 				this.$u.toast(res.message);
 			}
