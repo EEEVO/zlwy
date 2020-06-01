@@ -85,11 +85,11 @@ export default {
     async deviceDetail() {
       this.httpStatus = true;
       const res = await deviceDetail(this.deviceId);
+	  this.httpStatus = false;
       this.admin = res.result.admin;
       this.accountList = res.result.accountList;
       this.history_flag = res.result.history_flag;
 	  this.deviceName = res.result.name;
-      this.httpStatus = false;
     },
     update() {
       this.httpStatus = true;
