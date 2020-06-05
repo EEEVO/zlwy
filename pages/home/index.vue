@@ -3,7 +3,7 @@
     <view class="header"></view>
     <view class="main"><wInput v-model="deviceId" type="text" placeholder="请输入设备号"></wInput></view>
     <view class="btn-content">
-      <wButton text="扫码添加" @click.native="scanCode" class="wbutton" bgColor="#adc6ff"></wButton>
+      <wButton text="扫码添加" @click.native="scanCode" class="wbutton" bgColor="#ffaa00"></wButton>
       <wButton text="添加设备" :rotate="isRotate" @click.native="addDevice" class="wbutton"></wButton>
     </view>
   </view>

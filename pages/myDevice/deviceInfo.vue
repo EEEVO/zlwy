@@ -79,7 +79,7 @@ export default {
     },
     managPersonnel() {
       uni.navigateTo({
-        url: `./personnelManagement?accountList=${JSON.stringify(this.accountList)}&deviceId=${this.deviceId}`
+        url: `./personnelManagement?deviceId=${this.deviceId}`
       });
     },
     async deviceDetail() {
@@ -89,7 +89,7 @@ export default {
       this.admin = res.result.admin;
       this.accountList = res.result.accountList;
       this.history_flag = res.result.history_flag;
-	  this.deviceName = res.result.name;
+	  this.deviceName = res.result.detail;
     },
     update() {
       this.httpStatus = true;
