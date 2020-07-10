@@ -3,8 +3,11 @@
     <view class="header" v-bind:class="{ status: isH5Plus }">
       <view class="userinfo">
         <view class="info" v-if="isLogin">
-          <view class="username">{{ userinfo.username }}</view>
-          <view class="integral">{{ userinfo.integral }}</view>
+		  <open-data type="userAvatarUrl" class="portrait"></open-data>
+		  <view class="userview">
+			  <view class="username">{{ userinfo.username }}</view>
+			  <view class="integral">{{ userinfo.integral }}</view>
+		  </view>
         </view>
         <u-button v-else @click.native="login">点击登录</u-button>
       </view>
@@ -113,23 +116,37 @@ page {
     }
     .info {
       display: flex;
-      flex-flow: wrap;
       padding-left: 30upx;
-      .username {
-        width: 100%;
-        color: #fff;
-        font-size: 40upx;
-      }
-      .integral {
-        display: flex;
-        align-items: center;
-        padding: 0 20upx;
-        height: 40upx;
-        color: #fff;
-        background-color: rgba(0, 0, 0, 0.1);
-        border-radius: 20upx;
-        font-size: 24upx;
-      }
+	  .portrait {
+		overflow: hidden;
+		display: inline-block;
+		width: 120upx;
+		height: 120upx;
+		/* margin-top: 50rpx; */
+		border-radius: 50%;
+		border: 2px solid #fff;
+		box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+	  }
+	  .userview{
+		  display: flex;
+		  padding-left: 30upx;
+		  flex-wrap: wrap;
+		  .username {
+		    color: #fff;
+		    font-size: 40upx;
+			width: 100%;
+		  }
+		  .integral {
+		    display: flex;
+		    align-items: center;
+		    padding: 0 20upx;
+		    height: 40upx;
+		    color: #fff;
+		    background-color: rgba(0, 0, 0, 0.1);
+		    border-radius: 20upx;
+		    font-size: 24upx;
+		  }
+	  }
     }
   }
   .setting {
