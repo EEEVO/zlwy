@@ -7,9 +7,10 @@
             <view slot="label">数据质量：<u-tag :text="dataQuality" mode="dark" :type="type" /><u-icon size="40" name="reload"></u-icon></view>
           </view>
         </u-cell-item>
-        <u-cell-item v-for="(item, index) of dataList" :key="index" :title="item.name" :value="item.param_value" :center="true" :arrow="false" :use-label-slot="true">
-		  <u-icon slot="icon" size="34" name="tags" color="#2f54eb"></u-icon>
-          <view slot="label">刷新时间：{{ item.time }}</view>
+        <u-cell-item v-for="(item, index) of dataList" :key="index" :value="item.param_value" :center="true" 
+			:arrow="true" :use-label-slot="true" :title-style="{'color':'#424242'}">
+		  <view slot="title">{{ item.name }}</view>
+          <view slot="label">{{ item.time }}</view>
         </u-cell-item>
       </u-cell-group>
     </view>
@@ -128,7 +129,7 @@ export default {
     flex-direction: row-reverse;
   }
   /deep/.u-cell__value {
-    font-size: 16px;
+    // font-size: 14px;
     display: flex;
     align-items: center;
     flex-direction: row-reverse;
