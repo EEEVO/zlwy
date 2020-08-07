@@ -37,7 +37,8 @@
 	import {
 		deviceDetail,
 		paramList,
-		modeDetail
+		modeDetail,
+		modifyParam
 	} from '@/api/device.js';
 	export default {
 		data() {
@@ -59,7 +60,8 @@
 				admin: '', // 0-无权限 1-权限
 				history_flag: '', //历史数据查看权限，1仅管理员可看，2所有用户可看
 				modifyShow: false,
-				modeList: []  //模板数据
+				modeList: [],  //模板数据
+				paramCode: '' //当前点选的参数code
 			};
 		},
 		onLoad(option) {
@@ -93,12 +95,17 @@
 		methods: {
 			async openModify(index) {
 				if(this.dataList[index].modify_flag == 0){
-					console.log("可以编辑");
 					const res = await modeDetail(this.dataList[index].model);
-					this.modifyShow = true;
+					if(res.result.modeList){
+						this.modeList = res.result.modeList;
+						this.paramCode = this.dataList[index].param_code;
+						this.modifyShow = true;
+					}
 				}
 			},
-			actionClick(index) {
+			async actionClick(index) {
+				const res = await modifyParam(this.deviceId, this.paramCode, this.dataList[index].model);
+				this.$u.toast('修改成功');
 				
 			},
 			goHistoryData() {

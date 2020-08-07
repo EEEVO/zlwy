@@ -104,3 +104,14 @@ export const modeDetail = (modeId) => {
 		}
 	})
 }
+
+/**
+ * 修改参数值
+ */
+export const modifyParam = (deviceId, paramCode, paramValue) => {
+	return http.post('/v1/device/modifyParam', {
+		deviceId,
+		paramCode,
+		paramValue
+	})
+}
