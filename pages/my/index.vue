@@ -40,7 +40,6 @@ export default {
     };
   },
   onShow() {
-    console.log('onShow');
     this.init();
   },
   methods: {
