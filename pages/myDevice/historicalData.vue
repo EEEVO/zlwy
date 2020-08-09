@@ -1,5 +1,8 @@
 <template>
   <view>
+	  <view class="param-title">
+		  {{paramName}}
+	  </view>
     <u-cell-group>
       <u-field
         @click="showAction('duration', 'durationList')"
@@ -10,7 +13,7 @@
         right-icon="arrow-down-fill"
       ></u-field>
       <u-field @click="showPicker" v-model="endTime" :disabled="true" label="截止时间" placeholder="请选择截止时间" right-icon="arrow-down-fill"></u-field>
-      <u-field @click="showAction('param', 'paramList')" v-model="param" :disabled="true" label="参数" placeholder="请选择参数" right-icon="arrow-down-fill"></u-field>
+      <!-- <u-field @click="showAction('param', 'paramList')" v-model="param" :disabled="true" label="参数" placeholder="请选择参数" right-icon="arrow-down-fill"></u-field> -->
     </u-cell-group>
     <view class="qiun-charts">
       <canvas v-if="radarImgShow" canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas>
@@ -31,7 +34,7 @@ export default {
     return {
       deviceId: '',
 
-      durationCode: '1m',
+      durationCode: '1min',
       duration: '一分钟', //时间间隔
       durationList: [],
 
@@ -39,8 +42,9 @@ export default {
       endTime: new Date().Format('yyyy-MM-dd hh:mm'), // 截止时间
 
       paramCode: '',
+	  paramName: '',
       param: '', // 工程参数
-      paramList: [],
+      // paramList: [],
       configuration: {
         year: true,
         month: true,
@@ -63,6 +67,8 @@ export default {
     this.cWidth = uni.upx2px(750);
     this.cHeight = uni.upx2px(500);
     this.deviceId = option.deviceId;
+	this.paramCode = option.paramCode;
+	this.paramName = option.paramName;
     this.historyCond();
   },
   computed: {
@@ -173,14 +179,14 @@ export default {
           code: item.code
         };
       });
-      this.paramList = res.result.paramList.map(item => {
-        return {
-          text: item.name,
-          code: item.code
-        };
-      });
-      this.param = this.paramList[0].text;
-      this.paramCode = this.paramList[0].code;
+      // this.paramList = res.result.paramList.map(item => {
+      //   return {
+      //     text: item.name,
+      //     code: item.code
+      //   };
+      // });
+      // this.param = this.paramList[0].text;
+      // this.paramCode = this.paramList[0].code;
       this.historyQuery();
     },
     actionClick(index) {
@@ -193,6 +199,12 @@ export default {
 </script>
 
 <style scoped lang="less">
+.param-title{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 10upx 0upx;
+}
 /*样式的width和height一定要与定义的cWidth和cHeight相对应*/
 .qiun-charts {
   width: 750upx;

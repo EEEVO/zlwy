@@ -12,8 +12,8 @@
 						</view>
 					</view>
 				</u-cell-item>
-				<u-cell-item @click="openModify" :index="index" v-for="(item, index) of dataList" :value="item.param_value" :center="true"
-				 :arrow="item.modify_flag == 0" :key="index" :title-style="{'color':'#424242'}" :icon-size="100">
+				<u-cell-item @click="goHistoryData(item.param_code, item.name)" :index="index" v-for="(item, index) of dataList" :value="item.param_value" :center="true"
+				 :arrow="true" :key="index" :title-style="{'color':'#424242'}" :icon-size="100">
 					<view slot="title">{{ item.name }}</view>
 					<view slot="label">{{ item.time }}</view>
 				</u-cell-item>
@@ -21,12 +21,6 @@
 		</view>
 		<view class="btn-content" v-if="admin === '1'">
 			<u-button type="success" :custom-style="customStyle" @click="managPersonnel">管理绑定人员</u-button>
-		</view>
-		<view class="btn-content" v-if="history_flag === '2'">
-			<u-button type="primary" :custom-style="customStyle" @click="goHistoryData">历史数据</u-button>
-		</view>
-		<view class="btn-content" v-if="history_flag === '1' && admin === '1'">
-			<u-button type="primary" :custom-style="customStyle" @click="goHistoryData">历史数据</u-button>
 		</view>
 		<ourLoading isFullScreen :active="httpStatus" text="loading..." />
 		<u-action-sheet :list="modeList" @click="actionClick" v-model="modifyShow"></u-action-sheet>
@@ -58,7 +52,6 @@
 				deviceName: '',
 				accountList: [],
 				admin: '', // 0-无权限 1-权限
-				history_flag: '', //历史数据查看权限，1仅管理员可看，2所有用户可看
 				modifyShow: false,
 				modeList: [],  //模板数据
 				paramCode: '' //当前点选的参数code
@@ -108,9 +101,9 @@
 				this.$u.toast('修改成功');
 				
 			},
-			goHistoryData() {
+			goHistoryData(paramCode, paramName) {
 				uni.navigateTo({
-					url: `./historicalData?deviceId=${this.deviceId}`
+					url: `./historicalData?deviceId=${this.deviceId}&paramCode=` + paramCode + `&paramName=` + paramName
 				});
 			},
 			managPersonnel() {
@@ -124,7 +117,6 @@
 				this.httpStatus = false;
 				this.admin = res.result.admin;
 				this.accountList = res.result.accountList;
-				this.history_flag = res.result.history_flag;
 				this.deviceName = res.result.detail;
 			},
 			update() {
