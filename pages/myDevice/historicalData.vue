@@ -110,31 +110,30 @@ export default {
         pixelRatio: this.pixelRatio,
         categories: chartData.categories,
         series: chartData.series,
-        animation: true,
+        // animation: true,
         // enableScroll: true,
-        xAxis: {
-          // type: 'grid',
-          // gridColor: '#CCCCCC',
+        xAxis: {						
+		  gridEval: 60,						
           gridType: 'dash',
 		  disabled: false,
-		  
-          // rotateLabel: true,
-          fontSize: '0',
-		  dashLength:8
+		  disableGrid: false,
+          rotateLabel: true,
+		  dashLength:18,
+		  fontSize: '0'
         },
         yAxis: {
           gridType: 'dash',
           gridColor: '#CCCCCC',
 		  dashLength: 8,
-		  splitNumber: 5,
 		  format: (val) => {
-			return val.toFixed(1)
+			return val.toFixed(0)
 		  }
         },
         width: this.cWidth * this.pixelRatio,
         height: this.cHeight * this.pixelRatio,
         extra: {
-			lineStyle: 'straight'
+			lineStyle: 'curve',
+			width:'0'
 		}
       };
       canvaLineA = new uCharts(paras);
