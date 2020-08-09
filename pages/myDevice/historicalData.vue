@@ -81,11 +81,6 @@ export default {
       }
     }
   },
-  watch: {
-    radarImgShow() {
-      this.historyQuery();
-    }
-  },
   methods: {
     // 请求折线图数据
     async historyQuery() {
@@ -110,7 +105,7 @@ export default {
         fontSize: 11,
         legend: { show: true },
         dataLabel: false,
-        dataPointShape: true,
+        dataPointShape: false,
         background: '#FFFFFF',
         pixelRatio: this.pixelRatio,
         categories: chartData.categories,
@@ -118,23 +113,29 @@ export default {
         animation: true,
         // enableScroll: true,
         xAxis: {
-          type: 'grid',
-          gridColor: '#CCCCCC',
+          // type: 'grid',
+          // gridColor: '#CCCCCC',
           gridType: 'dash',
-          rotateLabel: true,
-          fontSize: '0'
+		  disabled: false,
+		  
+          // rotateLabel: true,
+          fontSize: '0',
+		  dashLength:8
         },
         yAxis: {
           gridType: 'dash',
-          gridColor: '#CCCCCC'
+          gridColor: '#CCCCCC',
+		  dashLength: 8,
+		  splitNumber: 5,
+		  format: (val) => {
+			return val.toFixed(1)
+		  }
         },
         width: this.cWidth * this.pixelRatio,
         height: this.cHeight * this.pixelRatio,
         extra: {
-          line: {
-            type: 'straight'
-          }
-        }
+			lineStyle: 'straight'
+		}
       };
       canvaLineA = new uCharts(paras);
     },
