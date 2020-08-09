@@ -35,7 +35,7 @@ export default {
       deviceId: '',
 
       durationCode: '1min',
-      duration: '一分钟', //时间间隔
+      duration: '一分钟(实时数据)', //时间间隔
       durationList: [],
 
       dateShow: false,
