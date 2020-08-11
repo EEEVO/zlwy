@@ -13,10 +13,9 @@
         right-icon="arrow-down-fill"
       ></u-field>
       <u-field @click="showPicker" v-model="endTime" :disabled="true" label="截止时间" placeholder="请选择截止时间" right-icon="arrow-down-fill"></u-field>
-      <!-- <u-field @click="showAction('param', 'paramList')" v-model="param" :disabled="true" label="参数" placeholder="请选择参数" right-icon="arrow-down-fill"></u-field> -->
     </u-cell-group>
     <view class="qiun-charts">
-      <canvas v-if="radarImgShow" canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas>
+	  <canvas v-if="radarImgShow" canvas-id="canvasLineA" id="canvasLineA" class="charts" disable-scroll=true @touchstart="touchLineA" @touchmove="moveLineA" @touchend="touchEndLineA"></canvas>
       <image v-else :src="radarImg"></image>
     </view>
     <u-action-sheet :list="selectList" @click="actionClick" v-model="show"></u-action-sheet>
@@ -34,8 +33,8 @@ export default {
     return {
       deviceId: '',
 
-      durationCode: '1min',
-      duration: '一分钟(实时数据)', //时间间隔
+      durationCode: '10min',
+      duration: '10分钟(实时数据)', //时间间隔
       durationList: [],
 
       dateShow: false,
@@ -44,7 +43,6 @@ export default {
       paramCode: '',
 	  paramName: '',
       param: '', // 工程参数
-      // paramList: [],
       configuration: {
         year: true,
         month: true,
@@ -110,16 +108,18 @@ export default {
         pixelRatio: this.pixelRatio,
         categories: chartData.categories,
         series: chartData.series,
-        // animation: true,
-        // enableScroll: true,
-        xAxis: {						
-		  gridEval: 60,						
-          gridType: 'dash',
-		  disabled: false,
-		  disableGrid: false,
-          rotateLabel: true,
-		  dashLength:18,
-		  fontSize: '0'
+        animation: false,
+        enableScroll: true,
+        xAxis: {
+			disableGrid:false,
+			type:'grid',
+			gridType: 'dash',
+			itemCount:30,
+			labelCount:30,
+			scrollShow:true,
+			scrollAlign:'left',
+			rotateLabel: true,
+			fontSize: '10'
         },
         yAxis: {
           gridType: 'dash',
@@ -132,19 +132,33 @@ export default {
         width: this.cWidth * this.pixelRatio,
         height: this.cHeight * this.pixelRatio,
         extra: {
-			lineStyle: 'curve',
-			width:'0'
+			line:{
+				type: 'straight'
+			}
 		}
       };
       canvaLineA = new uCharts(paras);
     },
     touchLineA(e) {
+		canvaLineA.scrollStart(e);
       canvaLineA.showToolTip(e, {
         format(item, category) {
           return category + ' ' + item.name + ':' + item.data;
         }
       });
     },
+	moveLineA(e) {
+		canvaLineA.scroll(e);
+	},
+	touchEndLineA(e) {
+		canvaLineA.scrollEnd(e);
+		//下面是toolTip事件，如果滚动后不需要显示，可不填写
+		canvaLineA.showToolTip(e, {
+			format: function (item, category) {
+				return category + ' ' + item.name + ':' + item.data 
+			}
+		});
+	},
     pickerClick(obj) {
       this.endTime = `${obj.year}-${obj.month}-${obj.day} ${obj.hour}:${obj.minute}`;
       this.historyQuery();
@@ -179,13 +193,6 @@ export default {
           code: item.code
         };
       });
-      // this.paramList = res.result.paramList.map(item => {
-      //   return {
-      //     text: item.name,
-      //     code: item.code
-      //   };
-      // });
-      // this.param = this.paramList[0].text;
       // this.paramCode = this.paramList[0].code;
       this.historyQuery();
     },
