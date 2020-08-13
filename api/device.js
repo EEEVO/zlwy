@@ -57,6 +57,18 @@ export const paramList = (device_id) => {
 }
 
 /**
+ * 查看指定参数详情
+ * @param {string} device_id 设备ID
+ */
+export const paramData = (param_code) => {
+	return http.get('v1/mine/param', {
+		params: {
+			param_code
+		}
+	})
+}
+
+/**
  * 获取查询历史条件数据
  * @param {string} device_id 设备ID
  */

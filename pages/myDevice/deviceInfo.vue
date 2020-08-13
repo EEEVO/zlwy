@@ -23,16 +23,13 @@
 			<u-button type="success" :custom-style="customStyle" @click="managPersonnel">管理绑定人员</u-button>
 		</view>
 		<ourLoading isFullScreen :active="httpStatus" text="loading..." />
-		<u-action-sheet :list="modeList" @click="actionClick" v-model="modifyShow"></u-action-sheet>
 	</view>
 </template>
 
 <script>
 	import {
 		deviceDetail,
-		paramList,
-		modeDetail,
-		modifyParam
+		paramList
 	} from '@/api/device.js';
 	export default {
 		data() {
@@ -53,7 +50,6 @@
 				accountList: [],
 				admin: '', // 0-无权限 1-权限
 				modifyShow: false,
-				modeList: [],  //模板数据
 				paramCode: '' //当前点选的参数code
 			};
 		},
@@ -86,21 +82,6 @@
 			}
 		},
 		methods: {
-			async openModify(index) {
-				if(this.dataList[index].modify_flag == 0){
-					const res = await modeDetail(this.dataList[index].model);
-					if(res.result.modeList){
-						this.modeList = res.result.modeList;
-						this.paramCode = this.dataList[index].param_code;
-						this.modifyShow = true;
-					}
-				}
-			},
-			async actionClick(index) {
-				const res = await modifyParam(this.deviceId, this.paramCode, this.dataList[index].model);
-				this.$u.toast('修改成功');
-				
-			},
 			goHistoryData(paramCode, paramName) {
 				uni.navigateTo({
 					url: `./historicalData?deviceId=${this.deviceId}&paramCode=` + paramCode + `&paramName=` + paramName

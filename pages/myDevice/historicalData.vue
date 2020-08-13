@@ -14,17 +14,34 @@
       ></u-field>
       <u-field @click="showPicker" v-model="endTime" :disabled="true" label="截止时间" placeholder="请选择截止时间" right-icon="arrow-down-fill"></u-field>
     </u-cell-group>
+	
     <view class="qiun-charts">
 	  <canvas v-if="radarImgShow" canvas-id="canvasLineA" id="canvasLineA" class="charts" disable-scroll=true @touchstart="touchLineA" @touchmove="moveLineA" @touchend="touchEndLineA"></canvas>
       <image v-else :src="radarImg"></image>
     </view>
+	
+	<u-cell-group>
+		<u-cell-item @click="openModify()" :arrow="modifyFlag == 0" :title="showName" :value="valueUnit"></u-cell-item>
+	</u-cell-group>
+	
     <u-action-sheet :list="selectList" @click="actionClick" v-model="show"></u-action-sheet>
     <u-picker v-model="dateShow" mode="time" :params="configuration" @confirm="pickerClick"></u-picker>
+	<u-action-sheet :list="modeList" @click="modeClick" v-model="modifyShow"></u-action-sheet>
+	<u-popup v-model="commonShow" mode="center" width="80%" height="150rpx">
+		<view>
+			<u-cell-group>
+				<u-field v-model="paramValue" label="参数值" placeholder="请输入新的参数值"></u-field>
+			</u-cell-group>
+			<u-cell-group>
+				<u-button @click="saveParam">确定</u-button>
+			</u-cell-group>
+		</view>
+	</u-popup>
   </view>
 </template>
 
 <script>
-import { historyCond, historyQuery } from '@/api/device.js';
+import { historyCond, historyQuery, paramData, modeDetail, modifyParam } from '@/api/device.js';
 import uCharts from '@/js-sdk/u-charts/u-charts.js';
 var canvaLineA = null;
 
@@ -42,6 +59,15 @@ export default {
 
       paramCode: '',
 	  paramName: '',
+	  paramUnit: '',
+	  paramValue: '',
+	  modifyFlag: '',
+	  paramModel: '',
+	  setIntervalObj: null,
+	  modeList: [],  //模板数据
+	  commonShow: false,
+	  modifyShow: false,
+	  
       param: '', // 工程参数
       configuration: {
         year: true,
@@ -69,6 +95,20 @@ export default {
 	this.paramName = option.paramName;
     this.historyCond();
   },
+  onShow() {
+  	this.paramData();
+	this.setIntervalObj = setInterval(() => {
+		this.paramData();
+	}, 3000);
+  },
+  onHide() {
+  	clearInterval(this.setIntervalObj);
+  	this.setIntervalObj = null;
+  },
+  onUnload() {
+  	clearInterval(this.setIntervalObj);
+  	this.setIntervalObj = null;
+  },
   computed: {
     radarImgShow() {
       this.createCanvasImg();
@@ -77,9 +117,46 @@ export default {
       } else {
         return true;
       }
-    }
+    },
+	valueUnit() {
+		return this.paramValue + " " + this.paramUnit;
+	},
+	showName() {
+		return "当前参数：" + this.paramName;
+	}
   },
   methods: {
+	  async openModify(index) {
+	  	if(this.modifyFlag == 0){
+			if(this.paramModel == 4) {
+				this.commonShow = true;
+			}else{
+				console.log(this.paramModel);
+				const res = await modeDetail(this.paramModel);
+				console.log(res);
+				if(res.result.modeList){
+					this.modeList = res.result.modeList;
+					this.modifyShow = true;
+				}
+			}
+	  	}
+	  },
+	  async modeClick(index) {
+	  	const res = await modifyParam(this.deviceId, this.paramCode, this.modeList[index].value);
+	  	this.$u.toast('修改成功');
+	  },
+	  async saveParam() {
+		  const res = await modifyParam(this.deviceId, this.paramCode, this.paramValue);
+		  this.$u.toast('修改成功');
+	  },
+	async paramData() {
+		const res = await paramData(this.paramCode);
+		this.paramName = res.result.name;
+		this.paramValue = res.result.param_value;
+		this.paramUnit = res.result.unit;
+		this.modifyFlag = res.result.modify_flag;
+		this.paramModel = res.result.model;
+	},
     // 请求折线图数据
     async historyQuery() {
       const res = await historyQuery(this.deviceId, this.durationCode, this.endTime, this.paramCode);
@@ -193,7 +270,6 @@ export default {
           code: item.code
         };
       });
-      // this.paramCode = this.paramList[0].code;
       this.historyQuery();
     },
     actionClick(index) {
