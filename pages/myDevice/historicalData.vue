@@ -4,6 +4,8 @@
 		  {{paramName}}
 	  </view>
     <u-cell-group>
+	  <u-field v-if="modifyFlag == 0" @click="openModify" right-icon="arrow-right" v-model="valueUnit" :disabled="true" label="参数值"></u-field>
+	  <u-field v-else v-model="valueUnit" :disabled="true" label="参数值"></u-field>
       <u-field
         @click="showAction('duration', 'durationList')"
         v-model="duration"
@@ -20,9 +22,9 @@
       <image v-else :src="radarImg"></image>
     </view>
 	
-	<u-cell-group>
+	<!-- <u-cell-group>
 		<u-cell-item @click="openModify()" :arrow="modifyFlag == 0" :title="showName" :value="valueUnit"></u-cell-item>
-	</u-cell-group>
+	</u-cell-group> -->
 	
     <u-action-sheet :list="selectList" @click="actionClick" v-model="show"></u-action-sheet>
     <u-picker v-model="dateShow" mode="time" :params="configuration" @confirm="pickerClick"></u-picker>
@@ -112,7 +114,7 @@ export default {
   computed: {
     radarImgShow() {
       this.createCanvasImg();
-      if (this.show || this.dateShow) {
+      if (this.show || this.dateShow || this.modifyShow || this.commonShow) {
         return false;
       } else {
         return true;
@@ -131,22 +133,22 @@ export default {
 			if(this.paramModel == 4) {
 				this.commonShow = true;
 			}else{
-				console.log(this.paramModel);
+				this.modifyShow = true;
 				const res = await modeDetail(this.paramModel);
-				console.log(res);
 				if(res.result.modeList){
 					this.modeList = res.result.modeList;
-					this.modifyShow = true;
 				}
 			}
 	  	}
 	  },
 	  async modeClick(index) {
 	  	const res = await modifyParam(this.deviceId, this.paramCode, this.modeList[index].value);
+		this.modifyShow = false;
 	  	this.$u.toast('修改成功');
 	  },
 	  async saveParam() {
 		  const res = await modifyParam(this.deviceId, this.paramCode, this.paramValue);
+		  this.commonShow = false;
 		  this.$u.toast('修改成功');
 	  },
 	async paramData() {
