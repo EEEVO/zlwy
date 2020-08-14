@@ -3,8 +3,11 @@
 		<view class="data-content">
 			<u-cell-group>
 				<u-cell-item :arrow="false" :center="true" :title-style="titleStyle" @click="update">
-					<view slot="title">{{ deviceName }}
-						<u-icon size="40" style="margin-left: 30upx;" name="reload"></u-icon>
+					<view slot="title">
+						<view slot="title">
+							{{ deviceName }}
+							<u-icon size="40" style="margin-left: 30upx;" name="reload"></u-icon>
+						</view>
 					</view>
 					<view slot="right-icon" class="title">
 						<view slot="label">数据质量：
@@ -13,7 +16,7 @@
 					</view>
 				</u-cell-item>
 				<u-cell-item @click="goHistoryData(item.param_code, item.name)" :index="index" v-for="(item, index) of dataList" :value="item.param_value" :center="true"
-				 :arrow="true" :key="index" :title-style="{'color':'#424242'}" :icon-size="100">
+				   :key="index" :title-style="{'color':'#424242'}">
 					<view slot="title">{{ item.name }}</view>
 					<view slot="label">{{ item.time }}</view>
 				</u-cell-item>
