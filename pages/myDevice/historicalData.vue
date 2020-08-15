@@ -18,13 +18,10 @@
     </u-cell-group>
 	
     <view class="qiun-charts">
-	  <canvas v-if="radarImgShow" canvas-id="canvasLineA" id="canvasLineA" class="charts" disable-scroll=true @touchstart="touchLineA" @touchmove="moveLineA" @touchend="touchEndLineA"></canvas>
-      <image v-else :src="radarImg"></image>
+	  <!-- <canvas v-if="radarImgShow" canvas-id="canvasLineA" id="canvasLineA" class="charts" disable-scroll=true @touchstart="touchLineA" @touchmove="moveLineA" @touchend="touchEndLineA"></canvas>
+      <image v-else :src="radarImg"></image> -->
+	  <canvas v-show="radarImgShow" canvas-id="canvasLineA" id="canvasLineA" class="charts" disable-scroll=true @touchstart="touchLineA" @touchmove="moveLineA" @touchend="touchEndLineA"></canvas>
     </view>
-	
-	<!-- <u-cell-group>
-		<u-cell-item @click="openModify()" :arrow="modifyFlag == 0" :title="showName" :value="valueUnit"></u-cell-item>
-	</u-cell-group> -->
 	
     <u-action-sheet :list="selectList" @click="actionClick" v-model="show"></u-action-sheet>
     <u-picker v-model="dateShow" mode="time" :params="configuration" @confirm="pickerClick"></u-picker>
@@ -101,7 +98,7 @@ export default {
   	this.paramData();
 	this.setIntervalObj = setInterval(() => {
 		this.paramData();
-	}, 3000);
+	}, 2000);
   },
   onHide() {
   	clearInterval(this.setIntervalObj);
@@ -113,7 +110,6 @@ export default {
   },
   computed: {
     radarImgShow() {
-      this.createCanvasImg();
       if (this.show || this.dateShow || this.modifyShow || this.commonShow) {
         return false;
       } else {
@@ -143,13 +139,13 @@ export default {
 	  },
 	  async modeClick(index) {
 	  	const res = await modifyParam(this.deviceId, this.paramCode, this.modeList[index].value);
-		this.modifyShow = false;
 	  	this.$u.toast('修改成功');
+		his.historyQuery();
 	  },
 	  async saveParam() {
 		  const res = await modifyParam(this.deviceId, this.paramCode, this.paramValue);
-		  this.commonShow = false;
 		  this.$u.toast('修改成功');
+		  this.commonShow = false;
 	  },
 	async paramData() {
 		const res = await paramData(this.paramCode);
@@ -158,6 +154,23 @@ export default {
 		this.paramUnit = res.result.unit;
 		this.modifyFlag = res.result.modify_flag;
 		this.paramModel = res.result.model;
+	},
+	showPicker() {
+	  this.dateShow = true;
+	},
+	pickerClick(obj) {
+	  this.endTime = `${obj.year}-${obj.month}-${obj.day} ${obj.hour}:${obj.minute}`;
+	  this.historyQuery();
+	},
+	showAction(key, arr) {
+	  this.selectList = this[arr];
+	  this.selectKey = key;
+	  this.show = true;
+	},
+	actionClick(index) {
+	  this[`${this.selectKey}Code`] = this.selectList[index].code;
+	  this[this.selectKey] = this.selectList[index].text;
+	  this.historyQuery();
 	},
     // 请求折线图数据
     async historyQuery() {
@@ -220,7 +233,7 @@ export default {
     },
     touchLineA(e) {
 		canvaLineA.scrollStart(e);
-      canvaLineA.showToolTip(e, {
+		canvaLineA.showToolTip(e, {
         format(item, category) {
           return category + ' ' + item.name + ':' + item.data;
         }
@@ -238,31 +251,6 @@ export default {
 			}
 		});
 	},
-    pickerClick(obj) {
-      this.endTime = `${obj.year}-${obj.month}-${obj.day} ${obj.hour}:${obj.minute}`;
-      this.historyQuery();
-    },
-    showAction(key, arr) {
-      this.selectList = this[arr];
-      this.selectKey = key;
-      this.show = true;
-    },
-    // 根据canvas生成图片,绕过canvas在微信小程序内始终只能显示在最上层的问题
-    createCanvasImg() {
-      wx.canvasToTempFilePath({
-        x: 0,
-        y: 0,
-        width: 750,
-        height: 500,
-        canvasId: 'canvasLineA',
-        success: res => {
-          this.radarImg = res.tempFilePath;
-        }
-      });
-    },
-    showPicker() {
-      this.dateShow = true;
-    },
     // 获取查询历史条件数据
     async historyCond() {
       const res = await historyCond(this.deviceId);
@@ -274,11 +262,19 @@ export default {
       });
       this.historyQuery();
     },
-    actionClick(index) {
-      this[`${this.selectKey}Code`] = this.selectList[index].code;
-      this[this.selectKey] = this.selectList[index].text;
-      this.historyQuery();
-    }
+	// 根据canvas生成图片,绕过canvas在微信小程序内始终只能显示在最上层的问题
+	createCanvasImg() {
+	  wx.canvasToTempFilePath({
+	    x: 0,
+	    y: 0,
+	    width: 750,
+	    height: 500,
+	    canvasId: 'canvasLineA',
+	    success: res => {
+	      this.radarImg = res.tempFilePath;
+	    }
+	  });
+	}
   }
 };
 </script>

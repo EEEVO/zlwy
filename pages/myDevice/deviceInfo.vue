@@ -59,7 +59,7 @@
 			this.paramList();
 			this.setIntervalObj = setInterval(() => {
 				this.paramList();
-			}, 3000);
+			}, 2000);
 			this.deviceDetail();
 		},
 		onHide() {
