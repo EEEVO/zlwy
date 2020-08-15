@@ -1,5 +1,5 @@
 {
-    "name" : "智力微云",
+    "name" : "山东省建筑材料工业设计研究院",
     "appid" : "",
     "description" : "",
     "versionName" : "1.0.0",
@@ -42,12 +42,12 @@
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wx6a4042bfa2db234b",
+        "appid" : "wx7dc1aa02f65b7076",
         "setting" : {
             "urlCheck" : true,
             "es6" : true,
             "postcss" : true,
-            "minified" : false
+            "minified" : true
         },
         "permission" : {},
         "optimization" : {
