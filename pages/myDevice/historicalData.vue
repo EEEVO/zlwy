@@ -41,9 +41,11 @@
 
 <script>
 import { historyCond, historyQuery, paramData, modeDetail, modifyParam } from '@/api/device.js';
+import { initSocket, finishSocket } from '@/utils/websocket.js';
+import { getUserToken } from '@/utils/token.js';
 import uCharts from '@/js-sdk/u-charts/u-charts.js';
 var canvaLineA = null;
-
+var socketTask = null;
 export default {
   data() {
     return {
@@ -96,9 +98,10 @@ export default {
   },
   onShow() {
   	this.paramData();
-	this.setIntervalObj = setInterval(() => {
-		this.paramData();
-	}, 2000);
+	// this.setIntervalObj = setInterval(() => {
+	// 	this.paramData();
+	// }, 2000);
+	this.refreshParam();
   },
   onHide() {
   	clearInterval(this.setIntervalObj);
@@ -107,6 +110,7 @@ export default {
   onUnload() {
   	clearInterval(this.setIntervalObj);
   	this.setIntervalObj = null;
+	finishSocket();
   },
   computed: {
     radarImgShow() {
@@ -274,6 +278,21 @@ export default {
 	      this.radarImg = res.tempFilePath;
 	    }
 	  });
+	},
+	refreshParam() {
+		console.log('开启获取实时数据');
+		let token = getUserToken();
+		this.socketTask = initSocket({
+			url: '/v1/paramSocket/' + token + '/' + `${this.deviceId}`,
+			onSocketMessage: (res) => {
+				let resObj = JSON.parse(res.data);
+				this.paramName = resObj.result.name;
+				this.paramValue = resObj.result.param_value;
+				this.paramUnit = resObj.result.unit;
+				this.modifyFlag = resObj.result.modify_flag;
+				this.paramModel = resObj.result.model;
+			}
+		});
 	}
   }
 };

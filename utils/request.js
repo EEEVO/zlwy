@@ -8,8 +8,8 @@ const http = new Request();
 
 http.setConfig((config) => {
   // config.baseUrl = 'https://wx.zinlin.cn/zleq/';
-  // config.baseUrl = 'http://127.0.0.1:9194/';
-  config.baseUrl = 'https://wx.zinlin.cn/sdbmi/';
+  config.baseUrl = 'http://127.0.0.1:9194/';
+  // config.baseUrl = 'https://wx.zinlin.cn/sdbmi/';
   return config
 })
 
@@ -21,7 +21,8 @@ http.interceptor.request((config, cancel) => {
   /* cancel 为函数，如果调用会取消本次请求。需要注意：调用cancel,本次请求的catch仍会执行。必须return config */
   config.header = {
     ...config.header,
-    Authorization: getUserToken()
+    Authorization: getUserToken(),
+	source: 'zleq'
   }
   // 演示custom 用处
   // if (config.custom.auth) {

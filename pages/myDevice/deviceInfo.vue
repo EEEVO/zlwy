@@ -30,6 +30,9 @@
 		deviceDetail,
 		paramList
 	} from '@/api/device.js';
+	import { initSocket, finishSocket } from '@/utils/websocket.js';
+	import { getUserToken } from '@/utils/token.js';
+	var socketTask = null;
 	export default {
 		data() {
 			return {
@@ -50,6 +53,7 @@
 				admin: '', // 0-无权限 1-权限
 				modifyShow: false,
 				paramCode: '' //当前点选的参数code
+				
 			};
 		},
 		onLoad(option) {
@@ -57,10 +61,11 @@
 		},
 		onShow() {
 			this.paramList();
-			this.setIntervalObj = setInterval(() => {
-				this.paramList();
-			}, 2000);
+			// this.setIntervalObj = setInterval(() => {
+			// 	this.paramList();
+			// }, 2000);
 			this.deviceDetail();
+			this.refreshParamList();
 		},
 		onHide() {
 			clearInterval(this.setIntervalObj);
@@ -69,6 +74,7 @@
 		onUnload() {
 			clearInterval(this.setIntervalObj);
 			this.setIntervalObj = null;
+			finishSocket();
 		},
 		computed: {
 			type() {
@@ -113,6 +119,24 @@
 				});
 				this.dataQuality = res.result.quality;
 				this.httpStatus = false;
+			},
+			refreshParamList() {
+				console.log('开启获取实时数据');
+				let token = getUserToken();
+				this.socketTask = initSocket({
+					url: '/v1/paramListSocket/' + token + '/' + `${this.deviceId}`,
+					onSocketMessage: (ress) => {
+						let resObj = JSON.parse(ress.data);
+						console.log(resObj);
+						this.dataList = resObj.result.paramDataList.map(item => {
+							return {
+								...item,
+								param_value: `${item.param_value}${item.unit}`
+							};
+						});
+						this.dataQuality = resObj.result.quality;
+					}
+				});
 			}
 		}
 	};

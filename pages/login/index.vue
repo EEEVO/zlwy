@@ -52,6 +52,13 @@ export default {
       //获取验证码
       this.$refs.runCode.$emit('runCode');
       const res = await verificationMsg(this.phoneData);
+	  if(200 != res.code){
+		  uni.showToast({
+		    icon: 'none',
+		    position: 'bottom',
+		    title: res.message
+		  });
+	  }
       console.log('发送验证码');
       this.isNickName = res.result.need_set_name;
       // 终止倒计时（用于突然需要终止倒计时的场景）
