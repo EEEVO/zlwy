@@ -1,5 +1,5 @@
-// const socketBase = 'ws://wx.zinlin.cn';
-const socketBase = 'ws://127.0.0.1:9194';
+const socketBase = 'wss://wx.zinlin.cn';
+// const socketBase = 'ws://127.0.0.1:9194';
 export const initSocket = (obj) => {
 	let socketUrl = socketBase + obj.url;
 	console.log('socketUrl:' + socketUrl);

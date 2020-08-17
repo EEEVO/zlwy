@@ -7,8 +7,8 @@ import {
 const http = new Request();
 
 http.setConfig((config) => {
-  // config.baseUrl = 'https://wx.zinlin.cn/zleq/';
-  config.baseUrl = 'http://127.0.0.1:9194/';
+  config.baseUrl = 'https://wx.zinlin.cn/zleq/';
+  // config.baseUrl = 'http://127.0.0.1:9194/';
   // config.baseUrl = 'https://wx.zinlin.cn/sdbmi/';
   return config
 })
