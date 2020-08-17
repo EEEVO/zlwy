@@ -43,7 +43,3 @@ export const initSocket = (obj) => {
 	}
 	return socketTask;
 }
-
-export const finishSocket = (obj) => {
-	uni.closeSocket();
-}
