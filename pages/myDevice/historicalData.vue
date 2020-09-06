@@ -6,7 +6,7 @@
     <u-cell-group>
 	  <u-field v-if="modifyFlag == 0" @click="openModify" right-icon="arrow-right" v-model="valueUnit" :disabled="true" label="参数值"></u-field>
 	  <u-field v-else v-model="valueUnit" :disabled="true" label="参数值"></u-field>
-      <u-field
+      <u-field v-if="statiscFlag == 0"
         @click="showAction('duration', 'durationList')"
         v-model="duration"
         :disabled="true"
@@ -14,10 +14,10 @@
         placeholder="请选择时间间隔"
         right-icon="arrow-down-fill"
       ></u-field>
-      <u-field @click="showPicker" v-model="endTime" :disabled="true" label="截止时间" placeholder="请选择截止时间" right-icon="arrow-down-fill"></u-field>
+      <u-field v-if="statiscFlag == 0" @click="showPicker" v-model="endTime" :disabled="true" label="截止时间" placeholder="请选择截止时间" right-icon="arrow-down-fill"></u-field>
     </u-cell-group>
 	
-    <view class="qiun-charts">
+    <view class="qiun-charts" v-if="statiscFlag == 0">
 	  <!-- <canvas v-if="radarImgShow" canvas-id="canvasLineA" id="canvasLineA" class="charts" disable-scroll=true @touchstart="touchLineA" @touchmove="moveLineA" @touchend="touchEndLineA"></canvas>
       <image v-else :src="radarImg"></image> -->
 	  <canvas v-show="radarImgShow" canvas-id="canvasLineA" id="canvasLineA" class="charts" disable-scroll=true @touchstart="touchLineA" @touchmove="moveLineA" @touchend="touchEndLineA"></canvas>
@@ -62,6 +62,8 @@ export default {
 	  paramUnit: '',
 	  paramValue: '',
 	  modifyFlag: '',
+	  statiscFlag: '',
+	  quality: '',
 	  paramModel: '',
 	  setIntervalObj: null,
 	  modeList: [],  //模板数据
@@ -99,7 +101,7 @@ export default {
   	this.paramData();
 	this.setIntervalObj = setInterval(() => {
 		this.paramData();
-	}, 2000);
+	}, 10000);
   },
 	onHide() {
 		clearInterval(this.setIntervalObj);
@@ -141,12 +143,24 @@ export default {
 	  },
 	  async modeClick(index) {
 	  	const res = await modifyParam(this.deviceId, this.paramCode, this.modeList[index].value);
-	  	this.$u.toast('修改成功');
+		if(200 != res.code){
+			this.$u.toast(res.message);
+		}else if('良好' != this.quality){
+			this.$u.toast('设备链接异常，修改失败');
+		}else{
+			this.$u.toast('修改成功');
+		}
 		his.historyQuery();
 	  },
 	  async saveParam() {
 		  const res = await modifyParam(this.deviceId, this.paramCode, this.paramValue);
-		  this.$u.toast('修改成功');
+		  if(200 != res.code){
+		  	this.$u.toast(res.message);
+		  }else if('良好' != this.quality){
+		  	this.$u.toast('设备链接异常，修改失败');
+		  }else{
+		  	this.$u.toast('修改成功');
+		  }
 		  this.commonShow = false;
 	  },
 	async paramData() {
@@ -156,6 +170,8 @@ export default {
 		this.paramUnit = res.result.unit;
 		this.modifyFlag = res.result.modify_flag;
 		this.paramModel = res.result.model;
+		this.statiscFlag = res.result.statisc_flag;
+		this.quality = res.result.quality;
 	},
 	showPicker() {
 	  this.dateShow = true;
